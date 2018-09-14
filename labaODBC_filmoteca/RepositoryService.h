@@ -14,6 +14,18 @@ class RepositoryService
 		SQLHDBC     hdbc; 		// Descriptor of conection
 		SQLRETURN   retcode; 	// Code of return
 
+		/*
+			Create connection with datebase;
+		*/
+		bool connection();		
+		/*
+			Break connection with datebase;
+		*/
+		void disconnect();
+
+		SQLHSTMT createHandler();
+		void removeHandler(SQLHSTMT* handler);
+
 	public:
 		
 		DB();
@@ -30,15 +42,13 @@ class RepositoryService
 		void removeFilmById(int id);
 		void removeFilmByTitle(string title);
 
-
-
 	};
 
-	static DB* db;
+	DB* db;
 
 public:
 
-	static DB* getDB() {
+	 DB* getDB() {
 		if (db == nullptr)
 		{
 			db = new DB();

@@ -11,26 +11,26 @@ class Film
 	string *title;
 	vector<string*> *genres;
 	vector<Actor*> *actors;
-	string *rating;
-	string *watched;
+	double *rating;
+	bool *watched;
 
 public:
 	Film();
 	Film(int* id, string* title, vector<string*>* genres,
-		vector<Actor*>* actors, string* rating, string* watched);
+		vector<Actor*>* actors, double* rating, bool* watched);
 	~Film();
 
 	void setId(int * id);
 	void setTitle(string* title);
 	void setGenres(vector<string*>* genres);
 	void setActors(vector<Actor*>* actors);
-	void setRating(string* rating);
-	void setWatched(string* wathced);
+	void setRating(double* rating);
+	void setWatched(bool* wathced);
 
 	int* getId();
 	string* getTitle();
 	vector<string*>* getGenres();
 	vector<Actor*>* getActors();
-	string* getRating();
-	string* getWatched();
+	double* getRating();
+	bool* getWatched();
 };
