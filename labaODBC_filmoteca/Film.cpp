@@ -6,8 +6,8 @@ Film::Film()
 {
 }
 
-Film::Film(int * id, string * title, vector<string*>* genres,
-	vector<Actor*>* actors, double * rating, bool * watched)
+Film::Film(int  id, string * title, vector<string*>* genres,
+	vector<Actor*>* actors, double  rating, bool  watched)
 {
 	this->id = id;
 	this->title = title;
@@ -20,15 +20,13 @@ Film::Film(int * id, string * title, vector<string*>* genres,
 
 Film::~Film()
 {
-	delete id;
+	
 	delete title;
 	delete genres;
 	delete actors;
-	delete rating;
-	delete watched;
 }
 
-void Film::setId(int * id)
+void Film::setId(int  id)
 {
 	this->id = id;
 }
@@ -48,17 +46,17 @@ void Film::setActors(vector<Actor*>* actors)
 	this->actors = actors;
 }
 
-void Film::setRating(double * rating)
+void Film::setRating(double  rating)
 {
 	this->rating = rating;
 }
 
-void Film::setWatched(bool * wathced)
+void Film::setWatched(bool  wathced)
 {
 	this->watched = watched;
 }
 
-int * Film::getId()
+int  Film::getId()
 {
 	return id;
 }
@@ -78,12 +76,12 @@ vector<Actor*>* Film::getActors()
 	return actors;
 }
 
-double * Film::getRating()
+double Film::getRating()
 {
 	return rating;
 }
 
-bool * Film::getWatched()
+bool Film::getWatched()
 {
 	return watched;
 }

@@ -82,14 +82,12 @@ vector<string> RepositoryService::DB::getGenres(string str)
 	for (int i = 0; i < listIdGenres.size(); i++)
 	{
 		if (i > 0){
-			char* id = new char(strlen(tmpStrId));
-			strcpy_s(id, BUFFER_SIZE, tmpStrId);
+			char* strchId = new char(strlen(tmpStrId));
+			strcpy_s(strchId, BUFFER_SIZE, tmpStrId);
 			
-			strcat_s(id, 255, listIdGenres[i].c_str());
-			strcat_s(query, 255, id);
-
+			strcat_s(strchId, 255, listIdGenres[i].c_str());
+			strcat_s(query, 255, strchId);
 		} else {
-
 			strcat_s(query, 255, listIdGenres[i].c_str());
 		}
 	}
@@ -142,7 +140,7 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 
 				//id
 				SQLGetData(hstmt, 1, SQL_C_ULONG, &buffer, BUFFER_SIZE, &sbId);
-				film->setId(new int(atoi((const char*)buffer)));
+				film->setId(atoi((const char*)buffer));
 
 				//title
 				SQLGetData(hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
@@ -161,7 +159,7 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 
 				//rating
 				SQLGetData(hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
-				film->setRating(new double(atof((const char*)buffer)));
+				film->setRating(atof((const char*)buffer));
 
 				//watched
 				SQLGetData(hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
@@ -171,7 +169,7 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 				} else {
 					isWatched = false;
 				}
-				film->setWatched(new bool(isWatched));
+				film->setWatched(isWatched);
 
 				listFilms->push_back(film);
 			}
