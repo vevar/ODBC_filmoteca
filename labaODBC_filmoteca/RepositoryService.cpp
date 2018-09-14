@@ -65,6 +65,57 @@ void RepositoryService::DB::removeHandler(SQLHSTMT* handler)
 	SQLFreeHandle(SQL_HANDLE_STMT, handler);
 }
 
+vector<string> RepositoryService::DB::getGenres(string str)
+{
+	vector<string> listIdGenres = Utility::separate(",", str.substr(1, str.size()-2));
+	vector<string> listGenres;
+
+	SQLCHAR buffer[BUFFER_SIZE];
+	SQLLEN sbGener;
+
+	SQLCHAR tmpQueryGenres[] = "SELECT genre FROM genre WHERE id=";
+	char tmpStrId[] = " OR id= ";
+
+	char* query = new char(strlen((const char*)tmpQueryGenres));
+	strcpy_s(query, BUFFER_SIZE, (const char*)tmpQueryGenres);
+
+	for (int i = 0; i < listIdGenres.size(); i++)
+	{
+		if (i > 0){
+			char* id = new char(strlen(tmpStrId));
+			strcpy_s(id, BUFFER_SIZE, tmpStrId);
+			
+			strcat_s(id, 255, listIdGenres[i].c_str());
+			strcat_s(query, 255, id);
+
+		} else {
+
+			strcat_s(query, 255, listIdGenres[i].c_str());
+		}
+	}
+
+	SQLHSTMT hstmt = createHandler();
+
+	retcode = SQLExecDirectA(hstmt, tmpQueryGenres, SQL_NTS);
+
+	while (TRUE) {
+		retcode = SQLFetch(hstmt);
+		if (retcode == SQL_ERROR || retcode == SQL_SUCCESS_WITH_INFO) {
+
+		}
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			SQLGetData(hstmt, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGener);
+			listGenres.push_back((const char*)buffer);
+		}
+		else {
+			break;
+		}
+	}
+
+
+	return listGenres;
+}
+
 vector<Film*>* RepositoryService::DB::getAllFilm()
 {
 	if (!connection()) {
@@ -99,6 +150,9 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 
 				//genres
 				SQLGetData(hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
+				vector<string> genres;
+				getGenres((const char*)buffer);
+				//film->setGenres();
 				//
 
 				//actors

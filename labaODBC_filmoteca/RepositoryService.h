@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Film.h"
+#include "Utility.h"
 
 using namespace std;
 
@@ -25,6 +26,8 @@ class RepositoryService
 
 		SQLHSTMT createHandler();
 		void removeHandler(SQLHSTMT* handler);
+
+		vector<string> getGenres(string );
 
 	public:
 		
