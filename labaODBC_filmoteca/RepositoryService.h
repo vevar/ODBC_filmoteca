@@ -24,10 +24,10 @@ class RepositoryService
 		*/
 		void disconnect();
 
-		SQLHSTMT createHandler();
+		SQLHSTMT* createHandler();
 		void removeHandler(SQLHSTMT* handler);
 
-		vector<string> getGenres(string );
+		vector<string*>* getGenres(string );
 
 	public:
 		

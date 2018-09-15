@@ -48,27 +48,29 @@ void RepositoryService::DB::disconnect()
 	SQLDisconnect(hdbc);
 }
 
-SQLHSTMT RepositoryService::DB::createHandler()
+SQLHSTMT* RepositoryService::DB::createHandler()
 {
-	SQLHSTMT hstmt;
-	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+	SQLHSTMT* handler = new SQLHSTMT();
+	retcode = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &*handler);
+
 	if (retcode != SQL_SUCCESS)
 	{
 		cout << "Error SQLAllocHandle(SQL_HANDLE_STMT)" << endl;
 	}
 
-	return hstmt;
+	return handler;
 }
 
 void RepositoryService::DB::removeHandler(SQLHSTMT* handler)
 {
 	SQLFreeHandle(SQL_HANDLE_STMT, handler);
+	delete handler;
 }
 
-vector<string> RepositoryService::DB::getGenres(string str)
+vector<string*>* RepositoryService::DB::getGenres(string str)
 {
 	vector<string> listIdGenres = Utility::separate(",", str.substr(1, str.size()-2));
-	vector<string> listGenres;
+	vector<string*>* listGenres = new vector<string*>();
 
 	SQLCHAR buffer[BUFFER_SIZE];
 	SQLLEN sbGener;
@@ -82,36 +84,35 @@ vector<string> RepositoryService::DB::getGenres(string str)
 	for (int i = 0; i < listIdGenres.size(); i++)
 	{
 		if (i > 0){
-			char* id = new char(strlen(tmpStrId));
-			strcpy_s(id, BUFFER_SIZE, tmpStrId);
+			char* strchId = new char(strlen(tmpStrId));
+			strcpy_s(strchId, BUFFER_SIZE, tmpStrId);
 			
-			strcat_s(id, 255, listIdGenres[i].c_str());
-			strcat_s(query, 255, id);
-
+			strcat_s(strchId, 255, listIdGenres[i].c_str());
+			strcat_s(query, 255, strchId);
 		} else {
-
 			strcat_s(query, 255, listIdGenres[i].c_str());
 		}
 	}
 
-	SQLHSTMT hstmt = createHandler();
+	SQLHSTMT *hstmt = createHandler();
 
-	retcode = SQLExecDirectA(hstmt, tmpQueryGenres, SQL_NTS);
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)(const char*)query, SQL_NTS);
 
 	while (TRUE) {
-		retcode = SQLFetch(hstmt);
+		retcode = SQLFetch(*hstmt);
 		if (retcode == SQL_ERROR || retcode == SQL_SUCCESS_WITH_INFO) {
 
 		}
 		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-			SQLGetData(hstmt, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGener);
-			listGenres.push_back((const char*)buffer);
+			SQLGetData(*hstmt, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGener);
+			listGenres->push_back(new string((const char*)buffer));
 		}
 		else {
 			break;
 		}
 	}
 
+	removeHandler(hstmt);
 
 	return listGenres;
 }
@@ -119,20 +120,20 @@ vector<string> RepositoryService::DB::getGenres(string str)
 vector<Film*>* RepositoryService::DB::getAllFilm()
 {
 	if (!connection()) {
-		return nullptr;
+		return NULL;
 	}
 
 	vector<Film*> *listFilms = new vector<Film*>();
 
 	SQLCHAR selecttxt[] = "SELECT id, title, genres, actors, rating, watched  FROM film";
 
-	SQLHSTMT hstmt = createHandler();
+	SQLHSTMT* hstmt = createHandler();
 	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
-	retcode = SQLExecDirectA(hstmt, selecttxt, SQL_NTS);
+	retcode = SQLExecDirectA(*hstmt, selecttxt, SQL_NTS);
 
 	if (retcode == SQL_SUCCESS) {
 		while (TRUE) {
-			retcode = SQLFetch(hstmt);
+			retcode = SQLFetch(*hstmt);
 			if (retcode == SQL_ERROR || retcode == SQL_SUCCESS_WITH_INFO) {
 
 			}
@@ -141,37 +142,35 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 				SQLCHAR buffer[BUFFER_SIZE];
 
 				//id
-				SQLGetData(hstmt, 1, SQL_C_ULONG, &buffer, BUFFER_SIZE, &sbId);
-				film->setId(new int(atoi((const char*)buffer)));
+				SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+				film->setId(atoi((const char *)buffer));
 
 				//title
-				SQLGetData(hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
+				SQLGetData(*hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
 				film->setTitle(new string((const char*)buffer));
 
 				//genres
-				SQLGetData(hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
-				vector<string> genres;
-				getGenres((const char*)buffer);
-				//film->setGenres();
+				SQLGetData(*hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
+				film->setGenres(getGenres((const char*)buffer));
 				//
 
 				//actors
-				SQLGetData(hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
+				SQLGetData(*hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
 				//
 
 				//rating
-				SQLGetData(hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
-				film->setRating(new double(atof((const char*)buffer)));
+				SQLGetData(*hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
+				film->setRating(atof((const char*)buffer));
 
 				//watched
-				SQLGetData(hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
+				SQLGetData(*hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
 				bool isWatched;
-				if (buffer[0] == 't') {
+				if (buffer[0] == '1') {
 					isWatched = true;
 				} else {
 					isWatched = false;
 				}
-				film->setWatched(new bool(isWatched));
+				film->setWatched(isWatched);
 
 				listFilms->push_back(film);
 			}
@@ -182,7 +181,7 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 		return listFilms;
 	}
 	
-	//removeHandler(hstmt);
+	removeHandler(hstmt);
 
 	return nullptr;
 }
