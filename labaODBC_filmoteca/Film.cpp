@@ -20,7 +20,6 @@ Film::Film(int  id, string * title, vector<string*>* genres,
 
 Film::~Film()
 {
-	
 	delete title;
 	delete genres;
 	delete actors;
@@ -51,7 +50,7 @@ void Film::setRating(double  rating)
 	this->rating = rating;
 }
 
-void Film::setWatched(bool  wathced)
+void Film::setWatched(bool  watched)
 {
 	this->watched = watched;
 }
