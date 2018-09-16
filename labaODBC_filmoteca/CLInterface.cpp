@@ -23,10 +23,13 @@ void CLInterface::printFilm(Film film)
 
 	cout << "Rating: " << film.getRating() << endl;
 	cout << "Watched: " << film.getWatched() << endl;
+	cout << endl;
 }
 
 void CLInterface::printMenu()
 {
+	cout << ":::Menu:::" << endl;
+
 	cout << "1. Get all films." << endl;
 	cout << "2. Add a film." << endl;
 	cout << "3. Edit a film." << endl;

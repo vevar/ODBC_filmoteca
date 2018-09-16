@@ -28,6 +28,9 @@ class RepositoryService
 		void removeHandler(SQLHSTMT* handler);
 
 		vector<string*>* getGenres(string );
+		vector<Actor*>* getActors(string idsActors);
+
+		string addIdsToQuery(string query, vector<string> listIds);
 
 	public:
 		

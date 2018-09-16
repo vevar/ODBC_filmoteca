@@ -3,17 +3,17 @@
 
 RepositoryService::DB::DB()
 {
-	retcode = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &henv);	//Init discriptor of environment
+	retcode = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &henv);				//Init discriptor of environment
 	if (retcode != SQL_SUCCESS) {
 		cout << "Error SQLAllocHandle(SQL_HANDLE_ENV)" << endl;
 	}
 
-	retcode = SQLSetEnvAttr(henv, SQL_ATTR_ODBC_VERSION, (void*)SQL_OV_ODBC3, 0);			//Define version of ODBC
+	retcode = SQLSetEnvAttr(henv, SQL_ATTR_ODBC_VERSION, (void*)SQL_OV_ODBC3, 0);	//Define version of ODBC
 	if (retcode != SQL_SUCCESS) {
 		cout << "Error SQLSetEnvAttr" << endl;
 	}
 
-	retcode = SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc);				//Init discriptor of conection 
+	retcode = SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc);							//Init discriptor of conection 
 	if (retcode != SQL_SUCCESS) {
 		cout << "Error SQLAllocHandle(Conection)" << endl;
 	}
@@ -21,7 +21,8 @@ RepositoryService::DB::DB()
 
 RepositoryService::DB::~DB()
 {
-
+	SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
+	SQLFreeHandle(SQL_HANDLE_ENV, henv);
 }
 
 SQLRETURN RepositoryService::DB::getCodeReturn()
@@ -75,52 +76,89 @@ vector<string*>* RepositoryService::DB::getGenres(string str)
 	SQLCHAR buffer[BUFFER_SIZE];
 	SQLLEN sbGener;
 
-	SQLCHAR tmpQueryGenres[] = "SELECT genre FROM genre WHERE id=";
-	char tmpStrId[] = " OR id= ";
+	string query = addIdsToQuery(string("SELECT genre FROM genre WHERE "), listIdGenres);
+	SQLHSTMT *handler = createHandler();
+	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
 
-	char* query = new char(strlen((const char*)tmpQueryGenres));
-	strcpy_s(query, BUFFER_SIZE, (const char*)tmpQueryGenres);
-
-	for (int i = 0; i < listIdGenres.size(); i++)
-	{
-		if (i > 0){
-			char* strchId = new char(strlen(tmpStrId));
-			strcpy_s(strchId, BUFFER_SIZE, tmpStrId);
-			
-			strcat_s(strchId, 255, listIdGenres[i].c_str());
-			strcat_s(query, 255, strchId);
-		} else {
-			strcat_s(query, 255, listIdGenres[i].c_str());
+	if (retcode == SQL_SUCCESS) {
+		while (TRUE) {
+			retcode = SQLFetch(*handler);
+			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+				SQLGetData(*handler, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGener);
+				listGenres->push_back(new string((const char*)buffer));
+			}
+			else {
+				break;
+			}
 		}
 	}
 
-	SQLHSTMT *hstmt = createHandler();
-
-	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)(const char*)query, SQL_NTS);
-
-	while (TRUE) {
-		retcode = SQLFetch(*hstmt);
-		if (retcode == SQL_ERROR || retcode == SQL_SUCCESS_WITH_INFO) {
-
-		}
-		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-			SQLGetData(*hstmt, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGener);
-			listGenres->push_back(new string((const char*)buffer));
-		}
-		else {
-			break;
-		}
-	}
-
-	removeHandler(hstmt);
+	removeHandler(handler);
 
 	return listGenres;
+}
+
+vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
+{
+	vector<string> listIdActors = Utility::separate(",", idsActors.substr(1, idsActors.size() - 2));
+	vector<Actor*>* listActors = new vector<Actor*>();
+
+	SQLCHAR buffer[BUFFER_SIZE];
+	SQLLEN sbActor;
+
+	string query = addIdsToQuery(string("SELECT first_name, second_name FROM actor WHERE "), listIdActors);
+	SQLHSTMT *handler = createHandler();
+	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
+	
+	if (retcode == SQL_SUCCESS) {
+		while (TRUE) {
+			retcode = SQLFetch(*handler);
+			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+				Actor* actor = new Actor();
+
+				SQLGetData(*handler, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActor);
+				actor->setFirstName(new string((const char*)buffer));
+
+				SQLGetData(*handler, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActor);
+				actor->setSecondName(new string((const char*)buffer));
+
+				listActors->push_back(actor);
+			} else {
+				break;
+			}
+		}
+	}
+
+	removeHandler(handler);
+
+	return listActors;
+
+}
+
+string RepositoryService::DB::addIdsToQuery(string query, vector<string> listIds)
+{
+	char tmpId[] = " id=";
+	char tmpOrId[] = " OR id=";
+
+	//add tmpId
+	if (listIds.size() > 0) {
+		query.append(tmpId);
+		query.append(listIds.at(0).c_str());
+	}
+
+	// add tmpOrId
+	for (int i = 1; i < listIds.size(); i++) {
+		query.append(tmpOrId);
+		query.append(listIds.at(i).c_str());
+	}
+
+	return query;
 }
 
 vector<Film*>* RepositoryService::DB::getAllFilm()
 {
 	if (!connection()) {
-		return NULL;
+		return nullptr;
 	}
 
 	vector<Film*> *listFilms = new vector<Film*>();
@@ -128,16 +166,19 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 	SQLCHAR selecttxt[] = "SELECT id, title, genres, actors, rating, watched  FROM film";
 
 	SQLHSTMT* hstmt = createHandler();
-	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
 	retcode = SQLExecDirectA(*hstmt, selecttxt, SQL_NTS);
+	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
 
-	if (retcode == SQL_SUCCESS) {
-		while (TRUE) {
-			retcode = SQLFetch(*hstmt);
-			if (retcode == SQL_ERROR || retcode == SQL_SUCCESS_WITH_INFO) {
+	if (retcode != SQL_SUCCESS) {
+		removeHandler(hstmt);
+		disconnect();
 
-			}
-			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+		return nullptr;
+	}
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 				Film *film = new Film();
 				SQLCHAR buffer[BUFFER_SIZE];
 
@@ -152,11 +193,10 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 				//genres
 				SQLGetData(*hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
 				film->setGenres(getGenres((const char*)buffer));
-				//
 
 				//actors
 				SQLGetData(*hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
-				//
+				film->setActors(getActors((const char *)buffer));
 
 				//rating
 				SQLGetData(*hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
@@ -174,16 +214,15 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 
 				listFilms->push_back(film);
 			}
-			else {
-				break;
-			}
+		else {
+			break;
 		}
-		return listFilms;
 	}
-	
-	removeHandler(hstmt);
 
-	return nullptr;
+	removeHandler(hstmt);
+	disconnect();
+
+	return listFilms;
 }
 
 void RepositoryService::DB::addFilm(Film film)
