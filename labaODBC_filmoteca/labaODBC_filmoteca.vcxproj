@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="CLInterface.h" />
     <ClInclude Include="Film.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="RepositoryService.h" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="CLInterface.cpp" />
     <ClCompile Include="Film.cpp" />
     <ClCompile Include="labaODBC_filmoteca.cpp" />
     <ClCompile Include="pch.cpp">
