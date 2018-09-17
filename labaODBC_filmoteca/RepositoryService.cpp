@@ -135,6 +135,20 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 
 }
 
+vector<string*>* RepositoryService::DB::getAllGenres()
+{
+	vector<string*>* genres = new vector<string*>;
+
+	if (!connection()) {
+		return nullptr;
+	}
+
+
+
+
+	return genres;
+}
+
 string RepositoryService::DB::addIdsToQuery(string query, vector<string> listIds)
 {
 	char tmpId[] = " id=";

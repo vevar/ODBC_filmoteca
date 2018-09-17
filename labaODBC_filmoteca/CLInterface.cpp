@@ -41,7 +41,7 @@ void CLInterface::printMenu()
 
 void CLInterface::printAllFilms()
 {
-	vector<Film*>* films = RepositoryService().getDB()->getAllFilm();
+	vector<Film*>* films = RepositoryService::getDB()->getAllFilm();
 
 	for (Film* film : *films) {
 		printFilm(*film);
@@ -55,7 +55,16 @@ void CLInterface::printFilm()
 
 void CLInterface::addFilm()
 {
+	cout << "Adding Film" << endl;
 
+	cout << "Title: " << endl;
+	string title;
+	cin >> title;
+
+	cout << "Genres" << endl;
+	vector<string*> genres = selectGenres();
+	
+	RepositoryService::getDB()->addFilm()
 }
 
 void CLInterface::editFilm()
@@ -64,6 +73,14 @@ void CLInterface::editFilm()
 
 void CLInterface::removeFilm()
 {
+}
+
+vector<string*>* CLInterface::selectGenres()
+{
+	vector<string*>* existsGenres = RepositoryService::getDB()->getAllGenres();
+	for (string *genre : *existsGenres) {
+		cout << genre << endl;
+	}
 }
 
 void CLInterface::run()
