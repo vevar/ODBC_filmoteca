@@ -30,8 +30,6 @@ class RepositoryService
 		vector<string*>* getGenres(string);
 		vector<Actor*>* getActors(string idsActors);
 
-		
-
 		string addIdsToQuery(string query, vector<string> listIds);
 
 	public:
@@ -44,8 +42,6 @@ class RepositoryService
 		vector<Film*>* getAllFilm();
 		vector<string*>* getAllGenres();
 		vector<Actor*>* getAllActors();
-
-
 
 		void addFilm(Film film);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Actor.h"
+#include "Genre.h"
 
 using namespace std;
 
@@ -9,27 +10,27 @@ class Film
 {
 	int id;
 	string* title;
-	vector<string*>*genres;
+	vector<Genre*>*genres;
 	vector<Actor*> *actors;
 	double rating;
 	bool watched;
 
 public:
 	Film();
-	Film(int id, string* title, vector<string*>* genres,
+	Film(int id, string* title, vector<Genre*>* genres,
 		vector<Actor*>* actors, double rating, bool watched);
 	~Film();
 
 	void setId(int id);
 	void setTitle(string* title);
-	void setGenres(vector<string*>* genres);
+	void setGenres(vector<Genre*>* genres);
 	void setActors(vector<Actor*>* actors);
 	void setRating(double rating);
 	void setWatched(bool wathced);
 
 	int getId();
 	string* getTitle();
-	vector<string*>* getGenres();
+	vector<Genre*>* getGenres();
 	vector<Actor*>* getActors();
 	double getRating();
 	bool getWatched();
