@@ -55,24 +55,20 @@ void CLInterface::printFilm()
 
 void CLInterface::addFilm()
 {
-	cout << "Adding Film" << endl;
+	cout << ":::Adding Film:::" << endl;
 
-	cout << "Title: " << endl;
 	string *title = inputTitle();
 
-	cout << "Genres: " << endl;
 	vector<Genre*>* genres = selectGenres();
 	
-	cout << "Actors: " << endl;
 	vector<Actor*>* actors = selectActors();
 
-	cout << "Rating: " << endl;
 	double rating = selectRating();
 
-	cout << "Watched: " << endl;
 	bool isWatched = selectWatched();
 
 	Film film(title, genres, actors, rating, isWatched);
+
 	RepositoryService::getDB()->addFilm(film);
 }
 
@@ -86,7 +82,20 @@ void CLInterface::removeFilm()
 
 string* CLInterface::inputTitle()
 {
-	return new string();
+	string* title = new string();
+
+	while (true)
+	{	
+		cout << "Title: " << endl;
+		cin >> *title;
+		if (title->size() == 0) {
+			cout << "Incorrect input!" << endl;
+		} else {
+			break;
+		}
+	}
+
+	return title;
 }
 
 vector<Genre*>* CLInterface::selectGenres()
