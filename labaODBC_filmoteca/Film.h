@@ -19,6 +19,8 @@ public:
 	Film();
 	Film(int id, string* title, vector<Genre*>* genres,
 		vector<Actor*>* actors, double rating, bool watched);
+	Film(string* title, vector<Genre*>* genres,
+		vector<Actor*>* actors, double rating, bool watched);
 	~Film();
 
 	void setId(int id);

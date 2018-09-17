@@ -6,7 +6,7 @@ Film::Film()
 {
 }
 
-Film::Film(int  id, string * title, vector<string*>* genres,
+Film::Film(int  id, string * title, vector<Genre*>* genres,
 	vector<Actor*>* actors, double  rating, bool  watched)
 {
 	this->id = id;
@@ -15,6 +15,11 @@ Film::Film(int  id, string * title, vector<string*>* genres,
 	this->actors = actors;
 	this->rating = rating;
 	this->watched = watched;
+}
+
+Film::Film(string * title, vector<Genre*>* genres, vector<Actor*>* actors, double rating, bool watched)
+{
+	Film(NULL, title, genres, actors, rating, watched);
 }
 
 
