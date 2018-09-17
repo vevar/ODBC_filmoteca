@@ -17,7 +17,7 @@ class CLInterface
 	static void editFilm();
 	static void removeFilm();
 
-	static vector<Genre*>* selectGenres();
+	static Genre* selectGenre();
 public:
 	
 	void run();

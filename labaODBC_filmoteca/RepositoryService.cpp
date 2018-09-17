@@ -68,15 +68,15 @@ void RepositoryService::DB::removeHandler(SQLHSTMT* handler)
 	delete handler;
 }
 
-vector<string*>* RepositoryService::DB::getGenres(string str)
+vector<Genre*>* RepositoryService::DB::getGenres(string str)
 {
 	vector<string> listIdGenres = Utility::separate(",", str.substr(1, str.size()-2));
-	vector<string*>* listGenres = new vector<string*>();
+	vector<Genre*>* listGenres = new vector<Genre*>();
 
 	SQLCHAR buffer[BUFFER_SIZE];
 	SQLLEN sbGener;
 
-	string query = addIdsToQuery(string("SELECT genre FROM genre WHERE "), listIdGenres);
+	string query = addIdsToQuery(string("SELECT * FROM genre WHERE "), listIdGenres);
 	SQLHSTMT *handler = createHandler();
 	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
 
@@ -84,8 +84,15 @@ vector<string*>* RepositoryService::DB::getGenres(string str)
 		while (TRUE) {
 			retcode = SQLFetch(*handler);
 			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+				Genre* genre = new Genre();
+				
 				SQLGetData(*handler, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGener);
-				listGenres->push_back(new string((const char*)buffer));
+				genre->setId(atoi((const char*)buffer));
+
+				SQLGetData(*handler, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGener);
+				genre->setName(string((const char*)buffer));
+
+				listGenres->push_back(genre);
 			}
 			else {
 				break;
@@ -135,15 +142,13 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 
 }
 
-vector<string*>* RepositoryService::DB::getAllGenres()
+vector<Genre*>* RepositoryService::DB::getAllGenres()
 {
-	vector<string*>* genres = new vector<string*>;
+	vector<Genre*>* genres = new vector<Genre*>;
 
 	if (!connection()) {
 		return nullptr;
 	}
-
-
 
 
 	return genres;

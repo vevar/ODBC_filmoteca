@@ -27,7 +27,7 @@ class RepositoryService
 		SQLHSTMT* createHandler();
 		void removeHandler(SQLHSTMT* handler);
 
-		vector<string*>* getGenres(string);
+		vector<Genre*>* getGenres(string);
 		vector<Actor*>* getActors(string idsActors);
 
 		string addIdsToQuery(string query, vector<string> listIds);
@@ -40,7 +40,7 @@ class RepositoryService
 		SQLRETURN getCodeReturn();
 
 		vector<Film*>* getAllFilm();
-		vector<string*>* getAllGenres();
+		vector<Genre*>* getAllGenres();
 		vector<Actor*>* getAllActors();
 
 		void addFilm(Film film);
