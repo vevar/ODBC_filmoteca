@@ -58,15 +58,22 @@ void CLInterface::addFilm()
 	cout << "Adding Film" << endl;
 
 	cout << "Title: " << endl;
-	string title;
-	cin >> title;
+	string title = inputTitle();
 
-	cout << "Genres" << endl;
-	Genre* genres = selectGenre();
+	cout << "Genres: " << endl;
+	vector<Genre*>* genres = selectGenres();
 	
+	cout << "Actors: " << endl;
+	vector<Actor*>* actors = selectActors();
 
+	cout << "Rating: " << endl;
+	double rating = selectRating();
 
-	//RepositoryService::getDB()->addFilm()
+	cout << "Watched: " << endl;
+	bool isWatched = selectWatched();
+
+	Film film(title, genres, actors, rating, isWatched);
+	RepositoryService::getDB()->addFilm(film);
 }
 
 void CLInterface::editFilm()
@@ -77,12 +84,32 @@ void CLInterface::removeFilm()
 {
 }
 
-Genre* CLInterface::selectGenre()
+string CLInterface::inputTitle()
+{
+	return string();
+}
+
+vector<Genre*>* CLInterface::selectGenres()
 {
 	vector<Genre*>* existsGenres = RepositoryService::getDB()->getAllGenres();
 	for (Genre *genre : *existsGenres) {
 		cout << genre->getId << ". " << genre->getName() << endl;
 	}
+}
+
+vector<Actor*>* CLInterface::selectActors()
+{
+	return nullptr;
+}
+
+double CLInterface::selectRating()
+{
+	return 0.0;
+}
+
+bool CLInterface::selectWatched()
+{
+	return false;
 }
 
 void CLInterface::run()

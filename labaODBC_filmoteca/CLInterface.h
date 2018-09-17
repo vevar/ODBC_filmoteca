@@ -17,7 +17,13 @@ class CLInterface
 	static void editFilm();
 	static void removeFilm();
 
-	static Genre* selectGenre();
+	//Funtions for creation new film 
+	static string inputTitle();
+	static vector<Genre*>* selectGenres();
+	static vector<Actor*>* selectActors();
+	static double selectRating();
+	static bool selectWatched(); 
+
 public:
 	
 	void run();
