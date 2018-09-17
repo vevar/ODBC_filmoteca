@@ -58,7 +58,7 @@ void CLInterface::addFilm()
 	cout << "Adding Film" << endl;
 
 	cout << "Title: " << endl;
-	string title = inputTitle();
+	string *title = inputTitle();
 
 	cout << "Genres: " << endl;
 	vector<Genre*>* genres = selectGenres();
@@ -84,9 +84,9 @@ void CLInterface::removeFilm()
 {
 }
 
-string CLInterface::inputTitle()
+string* CLInterface::inputTitle()
 {
-	return string();
+	return new string();
 }
 
 vector<Genre*>* CLInterface::selectGenres()

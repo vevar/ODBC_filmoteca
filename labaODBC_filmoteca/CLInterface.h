@@ -18,7 +18,7 @@ class CLInterface
 	static void removeFilm();
 
 	//Funtions for creation new film 
-	static string inputTitle();
+	static string* inputTitle();
 	static vector<Genre*>* selectGenres();
 	static vector<Actor*>* selectActors();
 	static double selectRating();

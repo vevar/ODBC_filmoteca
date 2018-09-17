@@ -40,7 +40,7 @@ void Film::setTitle(string * title)
 	this->title = title;
 }
 
-void Film::setGenres(vector<string*>* genres)
+void Film::setGenres(vector<Genre*>* genres)
 {
 	this->genres = genres;
 }
@@ -70,7 +70,7 @@ string * Film::getTitle()
 	return title;
 }
 
-vector<string*>* Film::getGenres()
+vector<Genre*>* Film::getGenres()
 {
 	return genres;
 }
