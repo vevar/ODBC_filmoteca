@@ -62,7 +62,7 @@ void CLInterface::addFilm()
 	cin >> title;
 
 	cout << "Genres" << endl;
-	vector<string*> genres = selectGenres();
+	vector<Genre*> genres = selectGenres();
 	
 	RepositoryService::getDB()->addFilm()
 }
@@ -75,7 +75,7 @@ void CLInterface::removeFilm()
 {
 }
 
-vector<string*>* CLInterface::selectGenres()
+vector<Genre*>* CLInterface::selectGenres()
 {
 	vector<string*>* existsGenres = RepositoryService::getDB()->getAllGenres();
 	for (string *genre : *existsGenres) {
