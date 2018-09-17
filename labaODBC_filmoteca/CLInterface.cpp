@@ -41,7 +41,7 @@ void CLInterface::printMenu()
 
 void CLInterface::printAllFilms()
 {
-	vector<Film*>* films = RepositoryService::getDB()->getAllFilm();
+	set<Film*>* films = RepositoryService().getDB()->getAllFilm();
 
 	for (Film* film : *films) {
 		printFilm(*film);
@@ -69,7 +69,7 @@ void CLInterface::addFilm()
 
 	Film film(title, genres, actors, rating, isWatched);
 
-	RepositoryService::getDB()->addFilm(film);
+	RepositoryService().getDB()->addFilm(film);
 }
 
 void CLInterface::editFilm()
@@ -93,6 +93,7 @@ string* CLInterface::inputTitle()
 		} else {
 			break;
 		}
+		cout << endl;
 	}
 
 	return title;
@@ -100,10 +101,45 @@ string* CLInterface::inputTitle()
 
 vector<Genre*>* CLInterface::selectGenres()
 {
-	vector<Genre*>* existsGenres = RepositoryService::getDB()->getAllGenres();
-	for (Genre *genre : *existsGenres) {
-		cout << genre->getId << ". " << genre->getName() << endl;
+	set<Genre*>* existsGenres = RepositoryService().getDB()->getAllGenres();
+	set<int>* selectedGenres = new set<int>();
+	set<Genre*>* setGenre = new set<Genre*>();
+
+	int contr = -1;
+
+	while (contr != 0) {
+		cout << "::Genres::" << endl;
+		for (Genre *genre : *existsGenres) {
+			if (selectedGenres->find(genre->getId()) == selectedGenres->end()) {
+				cout << '\t' << genre->getId() << ". " << genre->getName() << endl;
+			}
+			
+		}
+		cout << "0. Exit" << endl;
+
+		cout << "Input id of genre: ";
+		cin >> contr;
+
+		bool isFind = false;
+		for (Genre *genre : *existsGenres) {
+			if (genre->getId() == contr) {
+				setGenre->insert(genre);
+				selectedGenres->insert(genre->getId());
+				break;
+			}
+		}
+
+		if (!isFind) {
+			cout << "Inputed incorrect id!" << endl;
+		}
+
+		cout << endl;
 	}
+
+	delete selectedGenres;
+	delete existsGenres;
+
+	return new vector<Genre*>();
 }
 
 vector<Actor*>* CLInterface::selectActors()

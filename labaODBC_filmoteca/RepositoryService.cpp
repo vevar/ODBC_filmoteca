@@ -142,9 +142,9 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 
 }
 
-vector<Genre*>* RepositoryService::DB::getAllGenres()
+set<Genre*>* RepositoryService::DB::getAllGenres()
 {
-	vector<Genre*>* genres = new vector<Genre*>;
+	set<Genre*>* genres = new set<Genre*>;
 
 	if (!connection()) {
 		return nullptr;
@@ -154,7 +154,7 @@ vector<Genre*>* RepositoryService::DB::getAllGenres()
 	return genres;
 }
 
-vector<Actor*>* RepositoryService::DB::getAllActors()
+set<Actor*>* RepositoryService::DB::getAllActors()
 {
 	return nullptr;
 }
@@ -179,13 +179,13 @@ string RepositoryService::DB::addIdsToQuery(string query, vector<string> listIds
 	return query;
 }
 
-vector<Film*>* RepositoryService::DB::getAllFilm()
+set<Film*>* RepositoryService::DB::getAllFilm()
 {
 	if (!connection()) {
 		return nullptr;
 	}
 
-	vector<Film*> *listFilms = new vector<Film*>();
+	set<Film*> *listFilms = new set<Film*>();
 
 	SQLCHAR selecttxt[] = "SELECT id, title, genres, actors, rating, watched  FROM film";
 
@@ -236,7 +236,7 @@ vector<Film*>* RepositoryService::DB::getAllFilm()
 				}
 				film->setWatched(isWatched);
 
-				listFilms->push_back(film);
+				listFilms->insert(film);
 			}
 		else {
 			break;

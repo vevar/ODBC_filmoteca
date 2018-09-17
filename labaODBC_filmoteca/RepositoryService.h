@@ -39,9 +39,9 @@ class RepositoryService
 
 		SQLRETURN getCodeReturn();
 
-		vector<Film*>* getAllFilm();
-		vector<Genre*>* getAllGenres();
-		vector<Actor*>* getAllActors();
+		set<Film*>* getAllFilm();
+		set<Genre*>* getAllGenres();
+		set<Actor*>* getAllActors();
 
 		void addFilm(Film film);
 
@@ -52,11 +52,11 @@ class RepositoryService
 
 	};
 
-	static DB* db;
+	DB* db;
 
 public:
 
-	 static DB* getDB() {
+	 DB* getDB() {
 		if (db == nullptr)
 		{
 			db = new DB();
