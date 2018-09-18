@@ -24,6 +24,7 @@ class CLInterface
 	static double selectRating();
 	static bool selectWatched();
 	static void addNewGenre();
+	static void addNewActor();
 
 public:
 	

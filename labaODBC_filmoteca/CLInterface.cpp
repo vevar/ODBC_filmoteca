@@ -159,12 +159,79 @@ vector<Genre*>* CLInterface::selectGenres()
 
 vector<Actor*>* CLInterface::selectActors()
 {
-	return nullptr;
+	set<Actor*>* existsActor = RepositoryService().getDB()->getAllActors();
+	set<int>* selectedIdsActors = new set<int>();
+	vector<Actor*>* listActros = new vector<Actor*>();
+
+	int contr = -2;
+
+	while (contr != 0) {
+		cout << "::Actor::" << endl;
+		for (Actor *actor : *existsActor) {
+			if (selectedIdsActors->find(actor->getId()) == selectedIdsActors->end()) {
+				cout << '\t' << actor->getId() << ". " 
+					<< actor->getFirstName() << " " << actor->getSecondName() << endl;
+			}
+		}
+
+		cout << endl;
+		cout << "-1. Add new actor" << endl;
+		cout << "0. Exit" << endl;
+
+		cout << "Input id of actor: ";
+		cin >> contr;
+
+		if (contr == 0) {
+			break;
+		}
+
+		if (contr == -1) {
+			addNewActor();
+		}
+		else {
+			bool isFind = false;
+			int idActor;
+			for (Actor *actor : *existsActor) {
+				idActor = actor->getId();
+
+				if (idActor == contr && selectedIdsActors->find(idActor) == selectedIdsActors->end()) {
+					listActros->push_back(actor);
+					selectedIdsActors->insert(idActor);
+					isFind = true;
+					break;
+				}
+			}
+
+			if (!isFind) {
+				cout << "Inputed incorrect id!" << endl;
+			}
+		}
+
+		cout << endl;
+	}
+
+	delete selectedIdsActors;
+	delete existsActor;
+
+	return listActros;
 }
 
 double CLInterface::selectRating()
 {
-	return 0.0;
+	cout << "Rate the film for range(0..10) " << endl;
+
+	double rate = -1;
+	while (rate < 0 || rate > 10)
+	{
+		cout << "Input rate: ";
+		cin >> rate;
+
+		if (rate < 0 || rate > 10) {
+			cout << "Incorrect input" << endl;
+		}
+	}
+
+	return rate;
 }
 
 bool CLInterface::selectWatched()
@@ -173,6 +240,10 @@ bool CLInterface::selectWatched()
 }
 
 void CLInterface::addNewGenre()
+{
+}
+
+void CLInterface::addNewActor()
 {
 }
 
