@@ -102,15 +102,15 @@ string* CLInterface::inputTitle()
 vector<Genre*>* CLInterface::selectGenres()
 {
 	set<Genre*>* existsGenres = RepositoryService().getDB()->getAllGenres();
-	set<int>* selectedGenres = new set<int>();
-	set<Genre*>* setGenre = new set<Genre*>();
+	set<int>* selectedIdsGenres = new set<int>();
+	vector<Genre*>* listGenres = new vector<Genre*>();
 
 	int contr = -2;
 
 	while (contr != 0) {
 		cout << "::Genres::" << endl;
 		for (Genre *genre : *existsGenres) {
-			if (selectedGenres->find(genre->getId()) == selectedGenres->end()) {
+			if (selectedIdsGenres->find(genre->getId()) == selectedIdsGenres->end()) {
 				cout << '\t' << genre->getId() << ". " << genre->getName() << endl;
 			}
 		}
@@ -130,10 +130,13 @@ vector<Genre*>* CLInterface::selectGenres()
 			addNewGenre();
 		} else {
 			bool isFind = false;
+			int idGenre;
 			for (Genre *genre : *existsGenres) {
-				if (genre->getId() == contr) {
-					setGenre->insert(genre);
-					selectedGenres->insert(genre->getId());
+				idGenre = genre->getId();
+				
+				if (idGenre == contr && selectedIdsGenres->find(idGenre) == selectedIdsGenres->end()) {
+					listGenres->push_back(genre);
+					selectedIdsGenres->insert(idGenre);
 					isFind = true;
 					break;
 				}
@@ -147,10 +150,11 @@ vector<Genre*>* CLInterface::selectGenres()
 		cout << endl;
 	}
 
-	delete selectedGenres;
+	delete selectedIdsGenres;
 	delete existsGenres;
 
-	return new vector<Genre*>();
+	return listGenres;
+;
 }
 
 vector<Actor*>* CLInterface::selectActors()
