@@ -236,7 +236,26 @@ double CLInterface::selectRating()
 
 bool CLInterface::selectWatched()
 {
-	return false;
+	char watched;
+	bool isWatched;
+	while (true)
+	{
+		cout << "Did you watched this film? (y/n)" << endl;
+		cin >> watched;
+		watched = tolower(watched);
+		if (watched == 'y' || watched == 'n') {
+			if (watched == 'y') {
+				isWatched = true;
+			} else {
+				isWatched = false;
+			}
+		} else {
+			cout << "Incorrect input!" << endl;
+		}
+		cout << endl;
+	}
+	
+	return isWatched;
 }
 
 void CLInterface::addNewGenre()
