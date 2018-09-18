@@ -22,7 +22,8 @@ class CLInterface
 	static vector<Genre*>* selectGenres();
 	static vector<Actor*>* selectActors();
 	static double selectRating();
-	static bool selectWatched(); 
+	static bool selectWatched();
+	static void addNewGenre();
 
 public:
 	

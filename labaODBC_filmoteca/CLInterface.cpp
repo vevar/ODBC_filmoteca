@@ -105,7 +105,7 @@ vector<Genre*>* CLInterface::selectGenres()
 	set<int>* selectedGenres = new set<int>();
 	set<Genre*>* setGenre = new set<Genre*>();
 
-	int contr = -1;
+	int contr = -2;
 
 	while (contr != 0) {
 		cout << "::Genres::" << endl;
@@ -113,24 +113,35 @@ vector<Genre*>* CLInterface::selectGenres()
 			if (selectedGenres->find(genre->getId()) == selectedGenres->end()) {
 				cout << '\t' << genre->getId() << ". " << genre->getName() << endl;
 			}
-			
 		}
+
+		cout << endl;
+		cout << "-1. Add new genre" << endl;
 		cout << "0. Exit" << endl;
 
 		cout << "Input id of genre: ";
 		cin >> contr;
 
-		bool isFind = false;
-		for (Genre *genre : *existsGenres) {
-			if (genre->getId() == contr) {
-				setGenre->insert(genre);
-				selectedGenres->insert(genre->getId());
-				break;
-			}
+		if (contr == 0) {
+			break;
 		}
 
-		if (!isFind) {
-			cout << "Inputed incorrect id!" << endl;
+		if (contr == -1) {
+			addNewGenre();
+		} else {
+			bool isFind = false;
+			for (Genre *genre : *existsGenres) {
+				if (genre->getId() == contr) {
+					setGenre->insert(genre);
+					selectedGenres->insert(genre->getId());
+					isFind = true;
+					break;
+				}
+			}
+
+			if (!isFind) {
+				cout << "Inputed incorrect id!" << endl;
+			}
 		}
 
 		cout << endl;
@@ -155,6 +166,10 @@ double CLInterface::selectRating()
 bool CLInterface::selectWatched()
 {
 	return false;
+}
+
+void CLInterface::addNewGenre()
+{
 }
 
 void CLInterface::run()
