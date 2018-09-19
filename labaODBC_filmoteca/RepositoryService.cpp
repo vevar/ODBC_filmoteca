@@ -144,12 +144,44 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 
 set<Genre*>* RepositoryService::DB::getAllGenres()
 {
-	set<Genre*>* genres = new set<Genre*>;
 
 	if (!connection()) {
 		return nullptr;
 	}
 
+	SQLCHAR buffer[BUFFER_SIZE];
+	SQLLEN sbIdGenre, sbNameGenre;
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "SELECT * FROM genre";
+	set<Genre*>* genres = new set<Genre*>;
+	
+	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		while (TRUE) {
+			retcode = SQLFetch(*handler);
+			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+				Genre* genre = new Genre();
+
+				SQLGetData(*handler, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbIdGenre);
+				genre->setId(atoi((const char*)buffer));
+
+				SQLGetData(*handler, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbNameGenre);
+				genre->setName(string ((const char*)buffer));
+
+				genres->insert(genre);
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+	removeHandler(handler);
+
+	disconnect();
 
 	return genres;
 }
