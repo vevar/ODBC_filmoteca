@@ -111,9 +111,9 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 	vector<Actor*>* listActors = new vector<Actor*>();
 
 	SQLCHAR buffer[BUFFER_SIZE];
-	SQLLEN sbActor;
+	SQLLEN sbIdActor, sbFirstNameActor, sbSecondNameActor;
 
-	string query = addIdsToQuery(string("SELECT first_name, second_name FROM actor WHERE "), listIdActors);
+	string query = addIdsToQuery(string("SELECT * FROM actor WHERE "), listIdActors);
 	SQLHSTMT *handler = createHandler();
 	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
 	
@@ -123,10 +123,13 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 				Actor* actor = new Actor();
 
-				SQLGetData(*handler, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActor);
+				SQLGetData(*handler, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbIdActor);
+				actor->setId(atoi((const char*)buffer));
+
+				SQLGetData(*handler, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbFirstNameActor);
 				actor->setFirstName(new string((const char*)buffer));
 
-				SQLGetData(*handler, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActor);
+				SQLGetData(*handler, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbSecondNameActor);
 				actor->setSecondName(new string((const char*)buffer));
 
 				listActors->push_back(actor);
