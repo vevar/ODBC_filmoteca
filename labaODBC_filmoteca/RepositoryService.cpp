@@ -191,7 +191,48 @@ set<Genre*>* RepositoryService::DB::getAllGenres()
 
 set<Actor*>* RepositoryService::DB::getAllActors()
 {
-	return nullptr;
+	if (!connection()) {
+		return nullptr;
+	}
+
+	SQLCHAR buffer[BUFFER_SIZE];
+	SQLLEN sbIdActor, sbFirstNameActor, sbSecondName;
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "SELECT * FROM actor";
+	set<Genre*>* actor = new set<Genre*>;
+
+	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		while (TRUE) {
+			retcode = SQLFetch(*handler);
+			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+				Actor* actor = new Actor();
+
+				SQLGetData(*handler, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbIdActor);
+				actor->setId(atoi((const char*)buffer));
+
+				SQLGetData(*handler, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbFirstNameActor);
+				actor->setFirstName(string((const char*)buffer));
+
+				SQLGetData(*handler, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbSecondName);
+				actor->setSecondName(string((const char*)buffer));
+
+				actor->insert(actor);
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+	removeHandler(handler);
+
+	disconnect();
+
+	return actor;
 }
 
 string RepositoryService::DB::addIdsToQuery(string query, vector<string> listIds)
