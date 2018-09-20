@@ -325,8 +325,26 @@ set<Film*>* RepositoryService::DB::getAllFilm()
 	return listFilms;
 }
 
-void RepositoryService::DB::addFilm(Film film)
+bool RepositoryService::DB::addFilm(Film film)
 {
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "INSERT INTO film(title, genres, actors, rating, watched) VALUES('rrec', '{1,2}', '{1}', 4, true)";
+	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		return true;
+	}
+
+	removeHandler(handler);
+
+	disconnect();
+
+	return false;
 }
 
 void RepositoryService::DB::editFilmById(int id)

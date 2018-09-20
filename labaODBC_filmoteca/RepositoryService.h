@@ -43,7 +43,7 @@ class RepositoryService
 		set<Genre*>* getAllGenres();
 		set<Actor*>* getAllActors();
 
-		void addFilm(Film film);
+		bool addFilm(Film film);
 
 		void editFilmById(int id);
 
