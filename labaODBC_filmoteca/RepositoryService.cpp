@@ -127,10 +127,10 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 				actor->setId(atoi((const char*)buffer));
 
 				SQLGetData(*handler, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbFirstNameActor);
-				actor->setFirstName(new string((const char*)buffer));
+				actor->setFirstName(string((const char*)buffer));
 
 				SQLGetData(*handler, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbSecondNameActor);
-				actor->setSecondName(new string((const char*)buffer));
+				actor->setSecondName(string((const char*)buffer));
 
 				listActors->push_back(actor);
 			} else {
@@ -201,7 +201,7 @@ set<Actor*>* RepositoryService::DB::getAllActors()
 	SQLHSTMT *handler = createHandler();
 
 	string query = "SELECT * FROM actor";
-	set<Genre*>* actor = new set<Genre*>;
+	set<Actor*>* actors = new set<Actor*>;
 
 	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
 
@@ -220,7 +220,7 @@ set<Actor*>* RepositoryService::DB::getAllActors()
 				SQLGetData(*handler, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbSecondName);
 				actor->setSecondName(string((const char*)buffer));
 
-				actor->insert(actor);
+				actors->insert(actor);
 			}
 			else {
 				break;
@@ -232,7 +232,7 @@ set<Actor*>* RepositoryService::DB::getAllActors()
 
 	disconnect();
 
-	return actor;
+	return actors;
 }
 
 string RepositoryService::DB::addIdsToQuery(string query, vector<string> listIds)

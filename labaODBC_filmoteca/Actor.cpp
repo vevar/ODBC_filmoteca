@@ -6,7 +6,7 @@ Actor::Actor()
 {
 }
 
-Actor::Actor(int id, string * firstName, string* secondName)
+Actor::Actor(int id, string  firstName, string secondName)
 {
 	this->id = id;
 	this->firstName = firstName;
@@ -16,8 +16,7 @@ Actor::Actor(int id, string * firstName, string* secondName)
 
 Actor::~Actor()
 {
-	delete firstName;
-	delete secondName;
+	
 }
 
 void Actor::setId(int id)
@@ -25,22 +24,22 @@ void Actor::setId(int id)
 	this->id = id;
 }
 
-void Actor::setFirstName(string * firstName)
+void Actor::setFirstName(string  firstName)
 {
 	this->firstName = firstName;
 }
 
-void Actor::setSecondName(string * secondName)
+void Actor::setSecondName(string  secondName)
 {
 	this->secondName = secondName;
 }
 
-string * Actor::getFirstName()
+string  Actor::getFirstName()
 {
 	return firstName;
 }
 
-string * Actor::getSecondName()
+string  Actor::getSecondName()
 {
 	return secondName;
 }

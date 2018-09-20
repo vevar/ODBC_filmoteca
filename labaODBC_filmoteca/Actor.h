@@ -5,19 +5,19 @@ using namespace std;
 class Actor
 {
 	int id;
-	string *firstName;
-	string *secondName;
+	string firstName;
+	string secondName;
 
 public:
 	Actor();
-	Actor(int id, string* firstName, string* secondName);
+	Actor(int id, string firstName, string secondName);
 	~Actor();
 
 	void setId(int id);
-	void setFirstName(string* firstName);
-	void setSecondName(string* secondName);
+	void setFirstName(string firstName);
+	void setSecondName(string secondName);
 
 	int getId();
-	string* getFirstName();
-	string* getSecondName();
+	string getFirstName();
+	string getSecondName();
 };

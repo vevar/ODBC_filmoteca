@@ -18,7 +18,7 @@ void CLInterface::printFilm(Film film)
 	vector<Actor*>* actors = film.getActors();
 	cout << "Actors: " << endl;
 	for (Actor* actor : *actors) {
-		cout << '\t' << *actor->getFirstName() << " " << *actor->getSecondName() << endl;
+		cout << '\t' << actor->getFirstName() << " " << actor->getSecondName() << endl;
 	}
 
 	cout << "Rating: " << film.getRating() << endl;
