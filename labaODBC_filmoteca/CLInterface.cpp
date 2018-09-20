@@ -249,6 +249,7 @@ bool CLInterface::selectWatched()
 			} else {
 				isWatched = false;
 			}
+			break;
 		} else {
 			cout << "Incorrect input!" << endl;
 		}
