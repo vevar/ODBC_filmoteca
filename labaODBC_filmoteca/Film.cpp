@@ -82,11 +82,16 @@ string Film::getGenresIds()
 	strIds.append("{");
 	char * genreId;
 
-	for (Genre* genre : *genres) {
-		itoa(genre->getId(), genreId, 10);
+	int size = genres->size() - 1;
+	for (int i = 0; i < size; i++)
+	{
+		itoa(genres->at(i)->getId(), genreId, 10);
 		strIds.append(genreId);
-
+		strIds.append(",");
 	}
+	itoa(genres->at(size)->getId, genreId, 10);
+
+	strIds.append(genreId);
 	strIds.append("}");
 
 	return strIds;
@@ -95,6 +100,28 @@ string Film::getGenresIds()
 vector<Actor*>* Film::getActors()
 {
 	return actors;
+}
+
+string Film::getActorsIds()
+{
+	string strIds;
+
+	strIds.append("{");
+	char * actorId;
+
+	int size = actors->size() - 1;
+	for (int i = 0; i < size; i++)
+	{
+		itoa(actors->at(i)->getId(), actorId, 10);
+		strIds.append(actorId);
+		strIds.append(",");
+	}
+	itoa(actors->at(size)->getId, actorId, 10);
+
+	strIds.append(actorId);
+	strIds.append("}");
+
+	return strIds;
 }
 
 double Film::getRating()

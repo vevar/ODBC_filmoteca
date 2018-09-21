@@ -335,20 +335,39 @@ bool RepositoryService::DB::addFilm(Film film)
 	
 	string query = "INSERT INTO film(title, genres, actors, rating, watched) VALUES(?, ?, ?, ?, ?)";
 	retcode = SQLPrepareA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
-
+	SQLCHAR title[BUFFER_SIZE], genres[BUFFER_SIZE], actors[BUFFER_SIZE], rating[BUFFER_SIZE], watched[BUFFER_SIZE];
 	SQLLEN cdTitle, cdGenres, cdActors, cdRating, cdWatched;
-	retcode = SQLBindParameter(*handler, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0,
-		(SQLCHAR*)film.getTitle()->c_str(), 0, &cdTitle);
-	/*retcode = SQLBindParameter(*handler, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0,
-		(SQLCHAR*)film.getGenres(), 0, &cdTitle);*/
-	//retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
+
+	retcode = SQLBindParameter(*handler, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
+		0, 0, title, 0, &cdTitle);
+	retcode = SQLBindParameter(*handler, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
+		0, 0, genres, 0, &cdGenres);
+	retcode = SQLBindParameter(*handler, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
+		0, 0, actors, 0, &cdActors);
+	retcode = SQLBindParameter(*handler, 4, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
+		0, 0, rating, 0, &cdActors);
+	retcode = SQLBindParameter(*handler, 5, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
+		0, 0, watched, 0, &cdActors);
+
+
+	strcpy_s((char*)title, _countof(title), film.getTitle()->c_str());
+	strcpy_s((char *)genres, _countof(genres), film.getGenresIds().c_str());
+	strcpy_s((char *)actors, _countof(actors), film.getActorsIds().c_str());
+	char* tmpNum;
+	itoa(film.getRating(), tmpNum, 10);
+	strcpy_s((char *)rating, _countof(rating), tmpNum);
+	itoa(film.getWatched, tmpNum, 2);
+	strcat_s((char *)watched, _countof(watched), tmpNum);
+
+	retcode = SQLExecute(handler);
 
 	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
 		return true;
 	}
 
 	removeHandler(handler);
-
 	disconnect();
 
 	return false;

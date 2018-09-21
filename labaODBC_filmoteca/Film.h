@@ -35,6 +35,7 @@ public:
 	vector<Genre*>* getGenres();
 	string getGenresIds();
 	vector<Actor*>* getActors();
+	string getActorsIds();
 
 	double getRating();
 	bool getWatched();
