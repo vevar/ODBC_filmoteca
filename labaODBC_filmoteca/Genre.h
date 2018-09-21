@@ -17,5 +17,7 @@ public:
 
 	int getId();
 	string getName();
+
+
 };
 

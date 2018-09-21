@@ -332,9 +332,16 @@ bool RepositoryService::DB::addFilm(Film film)
 	}
 
 	SQLHSTMT *handler = createHandler();
+	
+	string query = "INSERT INTO film(title, genres, actors, rating, watched) VALUES(?, ?, ?, ?, ?)";
+	retcode = SQLPrepareA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
 
-	string query = "INSERT INTO film(title, genres, actors, rating, watched) VALUES('rrec', '{1,2}', '{1}', 4, true)";
-	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN cdTitle, cdGenres, cdActors, cdRating, cdWatched;
+	retcode = SQLBindParameter(*handler, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0,
+		(SQLCHAR*)film.getTitle()->c_str(), 0, &cdTitle);
+	/*retcode = SQLBindParameter(*handler, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR, 0, 0,
+		(SQLCHAR*)film.getGenres(), 0, &cdTitle);*/
+	//retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
 
 	if (retcode == SQL_SUCCESS) {
 		return true;

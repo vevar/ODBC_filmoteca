@@ -75,6 +75,23 @@ vector<Genre*>* Film::getGenres()
 	return genres;
 }
 
+string Film::getGenresIds()
+{
+	string strIds;
+
+	strIds.append("{");
+	char * genreId;
+
+	for (Genre* genre : *genres) {
+		itoa(genre->getId(), genreId, 10);
+		strIds.append(genreId);
+
+	}
+	strIds.append("}");
+
+	return strIds;
+}
+
 vector<Actor*>* Film::getActors()
 {
 	return actors;

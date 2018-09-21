@@ -33,7 +33,9 @@ public:
 	int getId();
 	string* getTitle();
 	vector<Genre*>* getGenres();
+	string getGenresIds();
 	vector<Actor*>* getActors();
+
 	double getRating();
 	bool getWatched();
 };
