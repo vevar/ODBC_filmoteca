@@ -378,10 +378,10 @@ void RepositoryService::DB::editFilmById(int id)
 {
 }
 
-void RepositoryService::DB::removeFilmById(int id)
+bool RepositoryService::DB::removeFilmById(int id)
 {
 }
 
-void RepositoryService::DB::removeFilmByTitle(string title)
+bool RepositoryService::DB::removeFilmByTitle(string title)
 {
 }

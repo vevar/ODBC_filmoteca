@@ -79,7 +79,13 @@ void CLInterface::removeFilm()
 {
 	cout << "::: Removing film :::" << endl;
 
-	int id = inputIdFilm();
+	int id;
+	do
+	{
+		id = inputIdFilm();
+		if (id == -1)
+			break;
+	} while (RepositoryService().getDB()->removeFilmById(id));
 }
 
 int CLInterface::inputIdFilm()
@@ -100,12 +106,13 @@ string* CLInterface::inputTitle()
 	string* title = new string();
 
 	while (true)
-	{	
+	{
 		cout << "Title: " << endl;
 		cin >> *title;
 		if (title->size() == 0) {
 			cout << "Incorrect input!" << endl;
-		} else {
+		}
+		else {
 			break;
 		}
 		cout << endl;
@@ -143,12 +150,13 @@ vector<Genre*>* CLInterface::selectGenres()
 
 		if (contr == -1) {
 			addNewGenre();
-		} else {
+		}
+		else {
 			bool isFind = false;
 			int idGenre;
 			for (Genre *genre : *existsGenres) {
 				idGenre = genre->getId();
-				
+
 				if (idGenre == contr && selectedIdsGenres->find(idGenre) == selectedIdsGenres->end()) {
 					listGenres->push_back(genre);
 					selectedIdsGenres->insert(idGenre);
@@ -169,7 +177,7 @@ vector<Genre*>* CLInterface::selectGenres()
 	delete existsGenres;
 
 	return listGenres;
-;
+	;
 }
 
 vector<Actor*>* CLInterface::selectActors()
@@ -184,7 +192,7 @@ vector<Actor*>* CLInterface::selectActors()
 		cout << "::Actor::" << endl;
 		for (Actor *actor : *existsActor) {
 			if (selectedIdsActors->find(actor->getId()) == selectedIdsActors->end()) {
-				cout << '\t' << actor->getId() << ". " 
+				cout << '\t' << actor->getId() << ". "
 					<< actor->getFirstName() << " " << actor->getSecondName() << endl;
 			}
 		}
@@ -261,16 +269,18 @@ bool CLInterface::selectWatched()
 		if (watched == 'y' || watched == 'n') {
 			if (watched == 'y') {
 				isWatched = true;
-			} else {
+			}
+			else {
 				isWatched = false;
 			}
 			break;
-		} else {
+		}
+		else {
 			cout << "Incorrect input!" << endl;
 		}
 		cout << endl;
 	}
-	
+
 	return isWatched;
 }
 

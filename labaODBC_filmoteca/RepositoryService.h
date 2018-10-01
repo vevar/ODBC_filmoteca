@@ -47,8 +47,8 @@ class RepositoryService
 
 		void editFilmById(int id);
 
-		void removeFilmById(int id);
-		void removeFilmByTitle(string title);
+		bool removeFilmById(int id);
+		bool removeFilmByTitle(string title);
 
 	};
 
