@@ -79,13 +79,10 @@ void CLInterface::removeFilm()
 {
 	cout << "::: Removing film :::" << endl;
 
-	int id;
-	do
-	{
-		id = inputIdFilm();
-		if (id == -1)
-			break;
-	} while (RepositoryService().getDB()->removeFilmById(id));
+	int id = inputIdFilm();
+	
+	if (id != -1)
+		RepositoryService().getDB()->removeFilmById(id);
 }
 
 int CLInterface::inputIdFilm()

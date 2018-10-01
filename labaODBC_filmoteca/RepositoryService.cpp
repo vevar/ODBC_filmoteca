@@ -380,8 +380,32 @@ void RepositoryService::DB::editFilmById(int id)
 
 bool RepositoryService::DB::removeFilmById(int id)
 {
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "DELETE FROM film WHERE id=";
+	char tmpNum[BUFFER_SIZE];
+	_itoa_s(id, tmpNum, BUFFER_SIZE, 10);
+	query.append(tmpNum);
+
+	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
+		return true;
+	}
+
+	removeHandler(handler);
+	disconnect();
+
+	return false;
 }
 
 bool RepositoryService::DB::removeFilmByTitle(string title)
 {
+	return false;
 }
