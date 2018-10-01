@@ -43,7 +43,7 @@ void CLInterface::printMenu()
 
 void CLInterface::printAllFilms()
 {
-	set<Film*>* films = RepositoryService::getDB()->getAllFilm();
+	set<Film*>* films = RepositoryService().getDB()->getAllFilm();
 
 	for (Film* film : *films) {
 		printFilm(*film);
@@ -67,7 +67,7 @@ void CLInterface::addFilm()
 
 	Film *film = new Film(title, genres, actors, rating, isWatched);
 
-	RepositoryService::getDB()->addFilm(film);
+	RepositoryService().getDB()->addFilm(film);
 	delete film;
 }
 
@@ -85,7 +85,7 @@ void CLInterface::removeFilm()
 	int id = inputIdFilm();
 	
 	if (id != -1)
-		RepositoryService::getDB()->removeFilmById(id);
+		RepositoryService().getDB()->removeFilmById(id);
 }
 
 int CLInterface::inputIdFilm()
@@ -123,7 +123,7 @@ string* CLInterface::inputTitle()
 
 vector<Genre*>* CLInterface::selectGenres()
 {
-	set<Genre*>* existsGenres = RepositoryService::getDB()->getAllGenres();
+	set<Genre*>* existsGenres = RepositoryService().getDB()->getAllGenres();
 	set<int>* selectedIdsGenres = new set<int>();
 	vector<Genre*>* listGenres = new vector<Genre*>();
 
@@ -182,7 +182,7 @@ vector<Genre*>* CLInterface::selectGenres()
 
 vector<Actor*>* CLInterface::selectActors()
 {
-	set<Actor*>* existsActor = RepositoryService::getDB()->getAllActors();
+	set<Actor*>* existsActor = RepositoryService().getDB()->getAllActors();
 	set<int>* selectedIdsActors = new set<int>();
 	vector<Actor*>* listActros = new vector<Actor*>();
 

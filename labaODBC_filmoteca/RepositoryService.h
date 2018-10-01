@@ -7,7 +7,7 @@ using namespace std;
 
 #define BUFFER_SIZE 255
 
-static class RepositoryService
+class RepositoryService
 {
 	class DB {
 
@@ -52,11 +52,11 @@ static class RepositoryService
 
 	};
 
-	static DB* db;
+	DB* db;
 
 public:
 
-	static DB* getDB() {
+	DB* getDB() {
 		if (db == nullptr)
 		{
 			db = new DB();
