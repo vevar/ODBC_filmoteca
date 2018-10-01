@@ -7,8 +7,8 @@ using namespace std;
 
 #define BUFFER_SIZE 255
 
-class RepositoryService
-{	
+static class RepositoryService
+{
 	class DB {
 
 		SQLHENV     henv;		// Descriptor of environment
@@ -18,7 +18,7 @@ class RepositoryService
 		/*
 			Create connection with datebase;
 		*/
-		bool connection();		
+		bool connection();
 		/*
 			Break connection with datebase;
 		*/
@@ -33,7 +33,7 @@ class RepositoryService
 		string addIdsToQuery(string query, vector<string> listIds);
 
 	public:
-		
+
 		DB();
 		~DB();
 
@@ -52,17 +52,17 @@ class RepositoryService
 
 	};
 
-	DB* db;
+	static DB* db;
 
 public:
 
-	 DB* getDB() {
+	static DB* getDB() {
 		if (db == nullptr)
 		{
 			db = new DB();
 		}
 		return db;
 	}
-	
+
 };
 

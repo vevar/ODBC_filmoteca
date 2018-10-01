@@ -35,7 +35,7 @@ bool RepositoryService::DB::connection()
 	retcode = SQLConnectA(hdbc, (SQLCHAR*) "PostgreSQL35W", SQL_NTS,
 		(SQLCHAR*)NULL, 0,
 		(SQLCHAR*)NULL, 0);
-	
+
 	if (retcode != SQL_SUCCESS) {
 		cout << "Error SQLConnect" << endl;
 		return false;
@@ -70,7 +70,7 @@ void RepositoryService::DB::removeHandler(SQLHSTMT* handler)
 
 vector<Genre*>* RepositoryService::DB::getGenres(string str)
 {
-	vector<string> listIdGenres = Utility::separate(",", str.substr(1, str.size()-2));
+	vector<string> listIdGenres = Utility::separate(",", str.substr(1, str.size() - 2));
 	vector<Genre*>* listGenres = new vector<Genre*>();
 
 	SQLCHAR buffer[BUFFER_SIZE];
@@ -85,7 +85,7 @@ vector<Genre*>* RepositoryService::DB::getGenres(string str)
 			retcode = SQLFetch(*handler);
 			if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
 				Genre* genre = new Genre();
-				
+
 				SQLGetData(*handler, 1, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGener);
 				genre->setId(atoi((const char*)buffer));
 
@@ -116,7 +116,7 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 	string query = addIdsToQuery(string("SELECT * FROM actor WHERE "), listIdActors);
 	SQLHSTMT *handler = createHandler();
 	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
-	
+
 	if (retcode == SQL_SUCCESS) {
 		while (TRUE) {
 			retcode = SQLFetch(*handler);
@@ -133,7 +133,8 @@ vector<Actor*>* RepositoryService::DB::getActors(string idsActors)
 				actor->setSecondName(string((const char*)buffer));
 
 				listActors->push_back(actor);
-			} else {
+			}
+			else {
 				break;
 			}
 		}
@@ -159,7 +160,7 @@ set<Genre*>* RepositoryService::DB::getAllGenres()
 
 	string query = "SELECT * FROM genre";
 	set<Genre*>* genres = new set<Genre*>;
-	
+
 	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
 
 	if (retcode == SQL_SUCCESS) {
@@ -172,7 +173,7 @@ set<Genre*>* RepositoryService::DB::getAllGenres()
 				genre->setId(atoi((const char*)buffer));
 
 				SQLGetData(*handler, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbNameGenre);
-				genre->setName(string ((const char*)buffer));
+				genre->setName(string((const char*)buffer));
 
 				genres->insert(genre);
 			}
@@ -279,41 +280,42 @@ set<Film*>* RepositoryService::DB::getAllFilm()
 	while (TRUE) {
 		retcode = SQLFetch(*hstmt);
 		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-				Film *film = new Film();
-				SQLCHAR buffer[BUFFER_SIZE];
+			Film *film = new Film();
+			SQLCHAR buffer[BUFFER_SIZE];
 
-				//id
-				SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
-				film->setId(atoi((const char *)buffer));
+			//id
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+			film->setId(atoi((const char *)buffer));
 
-				//title
-				SQLGetData(*hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
-				film->setTitle(new string((const char*)buffer));
+			//title
+			SQLGetData(*hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
+			film->setTitle(new string((const char*)buffer));
 
-				//genres
-				SQLGetData(*hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
-				film->setGenres(getGenres((const char*)buffer));
+			//genres
+			SQLGetData(*hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
+			film->setGenres(getGenres((const char*)buffer));
 
-				//actors
-				SQLGetData(*hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
-				film->setActors(getActors((const char *)buffer));
+			//actors
+			SQLGetData(*hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
+			film->setActors(getActors((const char *)buffer));
 
-				//rating
-				SQLGetData(*hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
-				film->setRating(atof((const char*)buffer));
+			//rating
+			SQLGetData(*hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
+			film->setRating(atof((const char*)buffer));
 
-				//watched
-				SQLGetData(*hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
-				bool isWatched;
-				if (buffer[0] == '1') {
-					isWatched = true;
-				} else {
-					isWatched = false;
-				}
-				film->setWatched(isWatched);
-
-				listFilms->insert(film);
+			//watched
+			SQLGetData(*hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
+			bool isWatched;
+			if (buffer[0] == '1') {
+				isWatched = true;
 			}
+			else {
+				isWatched = false;
+			}
+			film->setWatched(isWatched);
+
+			listFilms->insert(film);
+		}
 		else {
 			break;
 		}
@@ -332,7 +334,7 @@ bool RepositoryService::DB::addFilm(Film* film)
 	}
 
 	SQLHSTMT *handler = createHandler();
-	
+
 	string query = "INSERT INTO film(title, genres, actors, rating, watched) VALUES(";
 	query.append("'");
 	query.append(*film->getTitle());
@@ -349,7 +351,7 @@ bool RepositoryService::DB::addFilm(Film* film)
 	query.append("'");
 	query.append(",");
 	char tmpNum[BUFFER_SIZE];
-	_itoa_s(film->getRating(), tmpNum, BUFFER_SIZE,10);
+	_itoa_s(film->getRating(), tmpNum, BUFFER_SIZE, 10);
 	query.append(tmpNum);
 	query.append(",");
 	if (film->getWatched() == true) {
@@ -409,3 +411,4 @@ bool RepositoryService::DB::removeFilmByTitle(string title)
 {
 	return false;
 }
+
