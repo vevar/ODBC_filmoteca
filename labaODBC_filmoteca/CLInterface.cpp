@@ -7,6 +7,8 @@ void CLInterface::printFilm(Film film)
 {
 	cout << ":::Film:::" << endl;
 
+	cout << "Id:" << film.getId() << endl;
+
 	cout << "Title: " << *film.getTitle() << endl;
 
 	vector<Genre*>* genres = &*film.getGenres();
@@ -77,6 +79,20 @@ void CLInterface::removeFilm()
 {
 	cout << "::: Removing film :::" << endl;
 
+	int id = inputIdFilm();
+}
+
+int CLInterface::inputIdFilm()
+{
+	int id;
+	cout << "Id of film: ";
+	cin >> id;
+	if (id < 1)
+	{
+		cout << "Incorrect input" << endl;
+		return -1;
+	}
+	return id;
 }
 
 string* CLInterface::inputTitle()

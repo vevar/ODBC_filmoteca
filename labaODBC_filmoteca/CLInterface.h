@@ -26,6 +26,8 @@ class CLInterface
 	static void addNewGenre();
 	static void addNewActor();
 
+	static int  inputIdFilm();
+
 public:
 	
 	void run();

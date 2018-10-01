@@ -362,34 +362,6 @@ bool RepositoryService::DB::addFilm(Film* film)
 
 	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
 
-	/*SQLCHAR title[BUFFER_SIZE], genres[BUFFER_SIZE], actors[BUFFER_SIZE], rating[BUFFER_SIZE], watched[BUFFER_SIZE];
-	SQLLEN cdTitle, cdGenres, cdActors, cdRating, cdWatched;
-
-	retcode = SQLBindParameter(*handler, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
-		BUFFER_SIZE, 0, title, 0, &cdTitle);
-	retcode = SQLBindParameter(*handler, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
-		BUFFER_SIZE, 0, genres, 0, &cdGenres);
-	retcode = SQLBindParameter(*handler, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
-		BUFFER_SIZE, 0, actors, 0, &cdActors);
-	retcode = SQLBindParameter(*handler, 4, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
-		BUFFER_SIZE, 0, rating, 0, &cdActors);
-	retcode = SQLBindParameter(*handler, 5, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_CHAR,
-		BUFFER_SIZE, 0, watched, 0, &cdActors);
-
-
-	strcpy_s((char*)title, _countof(title), film.getTitle()->c_str());
-	strcpy_s((char *)genres, _countof(genres), film.getGenresIds().c_str());
-	strcpy_s((char *)actors, _countof(actors), film.getActorsIds().c_str());
-
-	char tmpNum[BUFFER_SIZE];
-	_itoa_s(film.getRating(), tmpNum, BUFFER_SIZE, 10);
-	strcpy_s((char *)rating, _countof(rating), tmpNum);
-	_itoa_s(film.getWatched(), tmpNum, BUFFER_SIZE, 10);
-	strcpy_s((char *)watched, _countof(watched), tmpNum);
-
-	retcode = SQLPrepareA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
-	retcode = SQLExecute(*handler);*/
-
 	if (retcode == SQL_SUCCESS) {
 		removeHandler(handler);
 		disconnect();
