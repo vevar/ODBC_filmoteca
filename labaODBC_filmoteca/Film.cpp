@@ -17,9 +17,9 @@ Film::Film(int  id, string * title, vector<Genre*>* genres,
 	this->watched = watched;
 }
 
-Film::Film(string * title, vector<Genre*>* genres, vector<Actor*>* actors, double rating, bool watched)
+Film::Film(string * title, vector<Genre*>* genres, vector<Actor*>* actors, double rating, bool watched):Film(NULL, title, genres, actors, rating, watched)
 {
-	Film(NULL, title, genres, actors, rating, watched);
+	
 }
 
 
@@ -78,22 +78,24 @@ vector<Genre*>* Film::getGenres()
 string Film::getGenresIds()
 {
 	string strIds;
+	if (genres->size() > 0) {
+		strIds.append("{");
+		char  genreId[255];
 
-	strIds.append("{");
-	char * genreId;
+		int size = genres->size() - 1;
+		for (int i = 0; i < size; i++)
+		{
+			_itoa_s(genres->at(i)->getId(), genreId, 255, 10);
+			strIds.append(genreId);
+			strIds.append(",");
+		}
+		_itoa_s(genres->at(size)->getId(), genreId, 255, 10);
 
-	int size = genres->size() - 1;
-	for (int i = 0; i < size; i++)
-	{
-		itoa(genres->at(i)->getId(), genreId, 10);
 		strIds.append(genreId);
-		strIds.append(",");
+		strIds.append("}");
+
 	}
-	itoa(genres->at(size)->getId, genreId, 10);
-
-	strIds.append(genreId);
-	strIds.append("}");
-
+	
 	return strIds;
 }
 
@@ -105,22 +107,24 @@ vector<Actor*>* Film::getActors()
 string Film::getActorsIds()
 {
 	string strIds;
+	if (actors->size() > 0){
+		strIds.append("{");
+		char actorId[255];
 
-	strIds.append("{");
-	char * actorId;
+		int size = actors->size() - 1;
+		for (int i = 0; i < size; i++)
+		{
+			_itoa_s(actors->at(i)->getId(), actorId, 255, 10);
+			strIds.append(actorId);
+			strIds.append(",");
+		}
+		_itoa_s(actors->at(size)->getId(), actorId, 255, 10);
 
-	int size = actors->size() - 1;
-	for (int i = 0; i < size; i++)
-	{
-		itoa(actors->at(i)->getId(), actorId, 10);
 		strIds.append(actorId);
-		strIds.append(",");
+		strIds.append("}");
+
 	}
-	itoa(actors->at(size)->getId, actorId, 10);
-
-	strIds.append(actorId);
-	strIds.append("}");
-
+	
 	return strIds;
 }
 

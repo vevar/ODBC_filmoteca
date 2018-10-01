@@ -58,18 +58,15 @@ void CLInterface::addFilm()
 	cout << ":::Adding Film:::" << endl;
 
 	string *title = inputTitle();
-
 	vector<Genre*>* genres = selectGenres();
-	
 	vector<Actor*>* actors = selectActors();
-
 	double rating = selectRating();
-
 	bool isWatched = selectWatched();
 
-	Film film(title, genres, actors, rating, isWatched);
+	Film *film = new Film(title, genres, actors, rating, isWatched);
 
 	RepositoryService().getDB()->addFilm(film);
+	delete film;
 }
 
 void CLInterface::editFilm()
@@ -78,6 +75,8 @@ void CLInterface::editFilm()
 
 void CLInterface::removeFilm()
 {
+	cout << "::: Removing film :::" << endl;
+
 }
 
 string* CLInterface::inputTitle()
