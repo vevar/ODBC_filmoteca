@@ -6,6 +6,11 @@ Genre::Genre()
 {
 }
 
+Genre::Genre(string name)
+{
+	this->name = name;
+}
+
 Genre::Genre(int id, string name)
 {
 	this->id = id;

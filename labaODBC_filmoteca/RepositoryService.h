@@ -49,6 +49,8 @@ class RepositoryService
 
 		bool removeFilmById(int id);
 		bool removeFilmByTitle(string title);
+		bool addGenre(Genre genre);
+		bool addActor(Actor actor);
 
 	};
 

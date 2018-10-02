@@ -10,6 +10,7 @@ class Actor
 
 public:
 	Actor();
+	Actor(string firstName, string secondName);
 	Actor(int id, string firstName, string secondName);
 	~Actor();
 

@@ -6,6 +6,12 @@ Actor::Actor()
 {
 }
 
+Actor::Actor(string firstName, string secondName)
+{
+	this->firstName = firstName;
+	this->secondName = secondName;
+}
+
 Actor::Actor(int id, string  firstName, string secondName)
 {
 	this->id = id;

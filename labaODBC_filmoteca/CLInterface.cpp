@@ -43,7 +43,7 @@ void CLInterface::printMenu()
 
 void CLInterface::printAllFilms()
 {
-	set<Film*>* films = RepositoryService().getDB()->getAllFilm();
+	set<Film*>* films = reposService.getDB()->getAllFilm();
 
 	for (Film* film : *films) {
 		printFilm(*film);
@@ -67,7 +67,7 @@ void CLInterface::addFilm()
 
 	Film *film = new Film(title, genres, actors, rating, isWatched);
 
-	RepositoryService().getDB()->addFilm(film);
+	reposService.getDB()->addFilm(film);
 	delete film;
 }
 
@@ -85,7 +85,7 @@ void CLInterface::removeFilm()
 	int id = inputIdFilm();
 	
 	if (id != -1)
-		RepositoryService().getDB()->removeFilmById(id);
+		reposService.getDB()->removeFilmById(id);
 }
 
 int CLInterface::inputIdFilm()
@@ -123,7 +123,7 @@ string* CLInterface::inputTitle()
 
 vector<Genre*>* CLInterface::selectGenres()
 {
-	set<Genre*>* existsGenres = RepositoryService().getDB()->getAllGenres();
+	set<Genre*>* existsGenres = reposService.getDB()->getAllGenres();
 	set<int>* selectedIdsGenres = new set<int>();
 	vector<Genre*>* listGenres = new vector<Genre*>();
 
@@ -177,12 +177,11 @@ vector<Genre*>* CLInterface::selectGenres()
 	delete existsGenres;
 
 	return listGenres;
-	;
 }
 
 vector<Actor*>* CLInterface::selectActors()
 {
-	set<Actor*>* existsActor = RepositoryService().getDB()->getAllActors();
+	set<Actor*>* existsActor = reposService.getDB()->getAllActors();
 	set<int>* selectedIdsActors = new set<int>();
 	vector<Actor*>* listActros = new vector<Actor*>();
 
@@ -286,10 +285,28 @@ bool CLInterface::selectWatched()
 
 void CLInterface::addNewGenre()
 {
+	cout << "::: Adding new genre :::" << endl;
+	
+	string newGenre;
+	cout << "Input new genre: ";
+	cin >> newGenre;
+
+	Genre genre(newGenre);
+	reposService.getDB()->addGenre(genre);
 }
 
 void CLInterface::addNewActor()
 {
+	cout << "::: Adding new actor :::" << endl;
+
+	string firstName, secondName;
+	cout << "Input new firstName of actor: ";
+	cin >> firstName;
+	cout << "Input new secondName of actor: ";
+	cin >> secondName;
+
+	Actor actor(firstName, secondName);
+	reposService.getDB()->addActor(actor);
 }
 
 void CLInterface::run()

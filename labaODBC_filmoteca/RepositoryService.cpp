@@ -412,3 +412,57 @@ bool RepositoryService::DB::removeFilmByTitle(string title)
 	return false;
 }
 
+bool RepositoryService::DB::addGenre(Genre genre)
+{
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "INSERT INTO genre(genre) VALUES(";
+	query.append(genre.getName());
+	query.append(")");
+
+	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
+		return true;
+	}
+
+	removeHandler(handler);
+	disconnect();
+
+	return false;
+}
+
+bool RepositoryService::DB::addActor(Actor actor)
+{
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "INSERT INTO actor(first_name, second_name) VALUES(";
+	query.append(actor.getFirstName());
+	query.append(",");
+	query.append(actor.getSecondName());
+	query.append(")");
+
+	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
+		return true;
+	}
+
+	removeHandler(handler);
+	disconnect();
+
+	return false;
+}
+

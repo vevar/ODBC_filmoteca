@@ -9,6 +9,7 @@ class Genre
 
 public:
 	Genre();
+	Genre(string name);
 	Genre(int id, string name);
 	~Genre();
 

@@ -7,26 +7,29 @@ using namespace std;
 
 class CLInterface
 {
+	RepositoryService reposService;
+
 	static void printFilm(Film film);
 	static void printMenu();
 
 	//Menu functins
-	static void printAllFilms();
-	static void printFilm();
-	static void addFilm();
-	static void editFilm();
-	static void removeFilm();
+	void printAllFilms();
+	void printFilm();
+	void addFilm();
+	void editFilm();
+	void removeFilm();
 
 	//Funtions for creation new film 
-	static string* inputTitle();
-	static vector<Genre*>* selectGenres();
-	static vector<Actor*>* selectActors();
-	static double selectRating();
-	static bool selectWatched();
-	static void addNewGenre();
-	static void addNewActor();
+	string* inputTitle();
+	vector<Genre*>* selectGenres();
+	vector<Actor*>* selectActors();
+	double selectRating();
+	bool selectWatched();
 
-	static int  inputIdFilm();
+	void addNewGenre();
+	void addNewActor();
+
+	int  inputIdFilm();
 
 public:
 	
