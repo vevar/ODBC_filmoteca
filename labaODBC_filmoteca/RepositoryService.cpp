@@ -236,6 +236,26 @@ set<Actor*>* RepositoryService::DB::getAllActors()
 	return actors;
 }
 
+set<Film*>* RepositoryService::DB::getFilmsByTitel(string title)
+{
+	return nullptr;
+}
+
+set<Film*>* RepositoryService::DB::getFilmsByGenre(string genre)
+{
+	return nullptr;
+}
+
+set<Film*>* RepositoryService::DB::getFilmsByActor(Actor actor)
+{
+	return nullptr;
+}
+
+set<Film*>* RepositoryService::DB::getFilmsByRatingAndWathced(int rating, bool watched)
+{
+	return nullptr;
+}
+
 string RepositoryService::DB::addIdsToQuery(string query, vector<string> listIds)
 {
 	char tmpId[] = " id=";
