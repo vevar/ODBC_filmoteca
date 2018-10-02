@@ -115,7 +115,6 @@ void CLInterface::editFilm()
 {
 	cout << "::: Edit of film :::" << endl;
 
-	int id = inputIdFilm();
 	printFilmEditMenu();
 
 	int cont = 0;
@@ -207,23 +206,62 @@ void CLInterface::editFilmTitle()
 	cin >> title;
 
 	reposService.getDB()->updateTitleById(id, title);
+	cout << ":::::::::::::::::::::::::::" << endl;
 
 }
 
 void CLInterface::editFilmGenre()
 {
+	int id;
+	cout << ":::::: Edit genres ::::::" << endl;
+	cout << "Input id of film: ";
+	cin >> id;
+	cout << "Select new genres: " << endl;
+	vector<Genre*>* genres = selectGenres();
+
+	reposService.getDB()->updateGenreById(id, genres);
+	cout << ":::::::::::::::::::::::::::" << endl;
+	delete genres;
 }
 
 void CLInterface::editFilmActor()
 {
+	int id;
+	cout << ":::::: Edit actos ::::::" << endl;
+	cout << "Input id of film: ";
+	cin >> id;
+	cout << "Select new actors: " << endl;
+	vector<Actor*>* actors = selectActors();
+
+	reposService.getDB()->updateActorById(id, actors);
+	cout << ":::::::::::::::::::::::::::" << endl;
+	delete actors;
 }
 
 void CLInterface::editFilmRating()
 {
+	int id;
+	double rating;
+	cout << ":::::: Edit rating ::::::" << endl;
+	cout << "Input id of film: ";
+	cin >> id;
+	cout << "Input new rating: ";
+	cin >> rating;
+	reposService.getDB()->updateRatingById(id, rating);
+	cout << ":::::::::::::::::::::::::::" << endl;
 }
 
 void CLInterface::editFilmWatched()
 {
+	int id;
+	bool watched;
+	cout << ":::::: Edit watched ::::::" << endl;
+	cout << "Input id of film: ";
+	cin >> id;
+	cout << "Input new watched: ";
+	cin >> watched;
+	reposService.getDB()->updateWatchedById(id, watched);
+	cout << ":::::::::::::::::::::::::::" << endl;
 }
 
 void CLInterface::searchByTitle()
