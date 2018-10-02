@@ -9,8 +9,9 @@ class CLInterface
 {
 	RepositoryService reposService;
 
-	static void printFilm(Film film);
-	static void printMenu();
+	void printFilm(Film film);
+	void printMenu();
+	void printFilmEditMenu();
 
 	//Menu functins
 	void printAllFilms();
@@ -26,10 +27,18 @@ class CLInterface
 	double selectRating();
 	bool selectWatched();
 
+	//Other functions
 	void addNewGenre();
 	void addNewActor();
 
 	int  inputIdFilm();
+	
+	//Edit functions
+	void editFilmTitle();
+	void editFilmGenre();
+	void editFilmActor();
+	void editFilmRating();
+	void editFilmWatched();
 
 public:
 	

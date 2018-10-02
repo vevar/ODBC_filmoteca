@@ -378,6 +378,7 @@ bool RepositoryService::DB::addFilm(Film* film)
 
 void RepositoryService::DB::editFilmById(int id)
 {
+
 }
 
 bool RepositoryService::DB::removeFilmById(int id)

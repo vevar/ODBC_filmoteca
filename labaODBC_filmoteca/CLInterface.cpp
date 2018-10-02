@@ -41,6 +41,18 @@ void CLInterface::printMenu()
 	cout << "0. Exit." << endl;
 }
 
+void CLInterface::printFilmEditMenu()
+{
+	cout << ":::::::: Edit menu ::::::::" << endl;
+
+	cout << "1. Edit title" << endl;
+	cout << "2. Edit genres" << endl;
+	cout << "3. Edit actros" << endl;
+	cout << "4. Edit rating" << endl;
+	cout << "5. Edit watched" << endl;
+	cout << ":::::::::::::::::::::::::::" << endl;
+}
+
 void CLInterface::printAllFilms()
 {
 	set<Film*>* films = reposService.getDB()->getAllFilm();
@@ -76,6 +88,30 @@ void CLInterface::editFilm()
 	cout << "::: Edit of film :::" << endl;
 
 	int id = inputIdFilm();
+	printFilmEditMenu();
+
+	int cont = 0;
+
+	switch (cont)
+	{
+	case 1:
+		editFilmTitle();
+		break;
+	case 2:
+		editFilmGenre();
+		break;
+	case 3:
+		editFilmActor();
+		break;
+	case 4:
+		editFilmRating();
+		break;
+	case 5:
+		editFilmWatched();
+	default:
+		cout << "Incorrect input!!!" << endl;
+		break;
+	}
 }
 
 void CLInterface::removeFilm()
@@ -99,6 +135,26 @@ int CLInterface::inputIdFilm()
 		return -1;
 	}
 	return id;
+}
+
+void CLInterface::editFilmTitle()
+{
+}
+
+void CLInterface::editFilmGenre()
+{
+}
+
+void CLInterface::editFilmActor()
+{
+}
+
+void CLInterface::editFilmRating()
+{
+}
+
+void CLInterface::editFilmWatched()
+{
 }
 
 string* CLInterface::inputTitle()
