@@ -143,7 +143,7 @@ void CLInterface::searchFilm()
 	switch (cont)
 	{
 	case 1:
-		searchByTitel();
+		searchByTitle();
 		break;
 	case 2:
 		searchByGenre();
@@ -155,7 +155,7 @@ void CLInterface::searchFilm()
 		searchByRatingNotWatched();
 		break;
 	default:
-		printIncorrectInput();
+		printMessage(MESSAGE_INCORRECT_INPUT);
 		break;
 	}
 }
@@ -167,7 +167,7 @@ int CLInterface::inputIdFilm()
 	cin >> id;
 	if (id < 1)
 	{
-		printIncorrectInput();
+		printMessage(MESSAGE_INCORRECT_INPUT);
 		return -1;
 	}
 	return id;
@@ -193,18 +193,40 @@ void CLInterface::editFilmWatched()
 {
 }
 
-void CLInterface::searchByTitel()
+void CLInterface::searchByTitle()
 {
 	string title;
 	
 	cout << "Input title: ";
 	cin >> title;
 
-	reposService.getDB().getFilmByTitel(title);
+	set<Film*>* films = reposService.getDB()->getFilmsByTitle(title);
+	if (films->size() > 0) {
+		for (Film* film : *films) {
+			printFilm(*film);
+		}
+	}
+	else {
+		printMessage(MESSAGE_FILM_NOT_FOUND);
+	}
 }
 
 void CLInterface::searchByGenre()
 {
+	string genre;
+
+	cout << "Input genre: ";
+	cin >> genre;
+
+	set<Film*>* films = reposService.getDB()->getFilmsByGenre(genre);
+	if (films->size() > 0) {
+		for (Film* film : *films) {
+			printFilm(*film);
+		}
+	}
+	else {
+		printMessage(MESSAGE_FILM_NOT_FOUND);
+	}
 }
 
 void CLInterface::searchByActor()
@@ -215,9 +237,9 @@ void CLInterface::searchByRatingNotWatched()
 {
 }
 
-void CLInterface::printIncorrectInput()
+void CLInterface::printMessage(const char * str)
 {
-	cout << "Incorrect input!!!" << endl;
+	cout << str << endl;
 }
 
 string* CLInterface::inputTitle()
@@ -229,7 +251,6 @@ string* CLInterface::inputTitle()
 		cout << "Title: " << endl;
 		cin >> *title;
 		if (title->size() == 0) {
-			printIncorrectInput();
 		}
 		else {
 			break;
@@ -372,7 +393,7 @@ double CLInterface::selectRating()
 		cin >> rate;
 
 		if (rate < 0 || rate > 10) {
-			printIncorrectInput();
+			printMessage(MESSAGE_INCORRECT_INPUT);
 		}
 	}
 
@@ -398,7 +419,7 @@ bool CLInterface::selectWatched()
 			break;
 		}
 		else {
-			printIncorrectInput();
+			printMessage(MESSAGE_INCORRECT_INPUT);
 		}
 		cout << endl;
 	}
@@ -459,7 +480,7 @@ void CLInterface::run()
 		case 0:
 			break;
 		default:
-			printIncorrectInput();
+			printMessage(MESSAGE_INCORRECT_INPUT);
 			break;
 		}
 	}

@@ -236,7 +236,7 @@ set<Actor*>* RepositoryService::DB::getAllActors()
 	return actors;
 }
 
-set<Film*>* RepositoryService::DB::getFilmsByTitel(string title)
+set<Film*>* RepositoryService::DB::getFilmsByTitle(string title)
 {
 	return nullptr;
 }

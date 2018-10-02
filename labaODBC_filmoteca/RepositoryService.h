@@ -43,7 +43,7 @@ class RepositoryService
 		set<Genre*>* getAllGenres();
 		set<Actor*>* getAllActors();
 
-		set<Film*>* getFilmsByTitel(string title);
+		set<Film*>* getFilmsByTitle(string title);
 		set<Film*>* getFilmsByGenre(string genre);
 		set<Film*>* getFilmsByActor(Actor actor);
 		set<Film*>* getFilmsByRatingAndWathced(int rating, bool watched);

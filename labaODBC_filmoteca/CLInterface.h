@@ -2,6 +2,8 @@
 
 #include "RepositoryService.h"
 
+#define MESSAGE_FILM_NOT_FOUND "Film not found."
+#define MESSAGE_INCORRECT_INPUT "Incorrect input."
 
 using namespace std;
 
@@ -45,13 +47,13 @@ class CLInterface
 	void editFilmWatched();
 	
 	//Functions of search menu
-	void searchByTitel();
+	void searchByTitle();
 	void searchByGenre();
 	void searchByActor();
 	void searchByRatingNotWatched();
 
 	//Info
-	void printIncorrectInput();
+	void printMessage(const char* str);
 
 public:
 	
