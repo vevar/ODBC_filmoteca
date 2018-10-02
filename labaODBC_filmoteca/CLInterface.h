@@ -10,8 +10,11 @@ class CLInterface
 	RepositoryService reposService;
 
 	void printFilm(Film film);
+
+	//Kinds of menu
 	void printMenu();
 	void printFilmEditMenu();
+	void printSearchMenu();
 
 	//Menu functins
 	void printAllFilms();
@@ -19,6 +22,7 @@ class CLInterface
 	void addFilm();
 	void editFilm();
 	void removeFilm();
+	void searchFilm();
 
 	//Funtions for creation new film 
 	string* inputTitle();
@@ -33,12 +37,21 @@ class CLInterface
 
 	int  inputIdFilm();
 	
-	//Edit functions
+	//Function of edit menu
 	void editFilmTitle();
 	void editFilmGenre();
 	void editFilmActor();
 	void editFilmRating();
 	void editFilmWatched();
+	
+	//Functions of search menu
+	void searchByTitel();
+	void searchByGenre();
+	void searchByActor();
+	void searchByRatingNotWatched();
+
+	//Info
+	void printIncorrectInput();
 
 public:
 	

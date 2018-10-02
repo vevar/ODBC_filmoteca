@@ -53,6 +53,16 @@ void CLInterface::printFilmEditMenu()
 	cout << ":::::::::::::::::::::::::::" << endl;
 }
 
+void CLInterface::printSearchMenu()
+{
+	cout << "::: Search menu :::" << endl;
+
+	cout << "1. Search by title" << endl;
+	cout << "2. Search by genre" << endl;
+	cout << "3. Search by actor" << endl;
+	cout << "4. Search by rating(not watched)" << endl;
+}
+
 void CLInterface::printAllFilms()
 {
 	set<Film*>* films = reposService.getDB()->getAllFilm();
@@ -119,9 +129,35 @@ void CLInterface::removeFilm()
 	cout << "::: Removing film :::" << endl;
 
 	int id = inputIdFilm();
-	
+
 	if (id != -1)
 		reposService.getDB()->removeFilmById(id);
+}
+
+void CLInterface::searchFilm()
+{
+	cout << "::: Search of film :::" << endl;
+
+	int cont = 0;
+	printSearchMenu();
+	switch (cont)
+	{
+	case 1:
+		searchByTitel();
+		break;
+	case 2:
+		searchByGenre();
+		break;
+	case 3:
+		searchByActor();
+		break;
+	case 4:
+		searchByRatingNotWatched();
+		break;
+	default:
+		printIncorrectInput();
+		break;
+	}
 }
 
 int CLInterface::inputIdFilm()
@@ -131,7 +167,7 @@ int CLInterface::inputIdFilm()
 	cin >> id;
 	if (id < 1)
 	{
-		cout << "Incorrect input" << endl;
+		printIncorrectInput();
 		return -1;
 	}
 	return id;
@@ -157,6 +193,33 @@ void CLInterface::editFilmWatched()
 {
 }
 
+void CLInterface::searchByTitel()
+{
+	string title;
+	
+	cout << "Input title: ";
+	cin >> title;
+
+	reposService.getDB().getFilmByTitel(title);
+}
+
+void CLInterface::searchByGenre()
+{
+}
+
+void CLInterface::searchByActor()
+{
+}
+
+void CLInterface::searchByRatingNotWatched()
+{
+}
+
+void CLInterface::printIncorrectInput()
+{
+	cout << "Incorrect input!!!" << endl;
+}
+
 string* CLInterface::inputTitle()
 {
 	string* title = new string();
@@ -166,7 +229,7 @@ string* CLInterface::inputTitle()
 		cout << "Title: " << endl;
 		cin >> *title;
 		if (title->size() == 0) {
-			cout << "Incorrect input!" << endl;
+			printIncorrectInput();
 		}
 		else {
 			break;
@@ -179,7 +242,7 @@ string* CLInterface::inputTitle()
 
 vector<Genre*>* CLInterface::selectGenres()
 {
-	set<Genre*>* existsGenres; 
+	set<Genre*>* existsGenres;
 	set<int>* selectedIdsGenres = new set<int>();
 	vector<Genre*>* listGenres = new vector<Genre*>();
 
@@ -309,7 +372,7 @@ double CLInterface::selectRating()
 		cin >> rate;
 
 		if (rate < 0 || rate > 10) {
-			cout << "Incorrect input" << endl;
+			printIncorrectInput();
 		}
 	}
 
@@ -335,7 +398,7 @@ bool CLInterface::selectWatched()
 			break;
 		}
 		else {
-			cout << "Incorrect input!" << endl;
+			printIncorrectInput();
 		}
 		cout << endl;
 	}
@@ -346,7 +409,7 @@ bool CLInterface::selectWatched()
 void CLInterface::addNewGenre()
 {
 	cout << "::: Adding new genre :::" << endl;
-	
+
 	string newGenre;
 	cout << "Input new genre: ";
 	cin >> newGenre;
@@ -396,7 +459,7 @@ void CLInterface::run()
 		case 0:
 			break;
 		default:
-			cout << "Incorrect input!!!" << endl;
+			printIncorrectInput();
 			break;
 		}
 	}
