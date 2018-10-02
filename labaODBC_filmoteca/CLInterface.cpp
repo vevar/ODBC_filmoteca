@@ -48,7 +48,7 @@ void CLInterface::printMenu()
 	cout << "2. Add a film." << endl;
 	cout << "3. Edit a film." << endl;
 	cout << "4. Delete a film" << endl;
-
+	cout << "5. Search" << endl;
 
 	cout << endl;
 	cout << "0. Exit." << endl;
@@ -117,6 +117,7 @@ void CLInterface::editFilm()
 	printFilmEditMenu();
 
 	int cont = 0;
+	cin >> cont;
 
 	switch (cont)
 	{
@@ -156,6 +157,9 @@ void CLInterface::searchFilm()
 
 	int cont = 0;
 	printSearchMenu();
+	
+	cin >> cont;
+
 	switch (cont)
 	{
 	case 1:
@@ -181,6 +185,7 @@ int CLInterface::inputIdFilm()
 	int id;
 	cout << "Id of film: ";
 	cin >> id;
+
 	if (id < 1)
 	{
 		printMessage(MESSAGE_INCORRECT_INPUT);
@@ -501,6 +506,8 @@ void CLInterface::run()
 		case 4:
 			removeFilm();
 			break;
+		case 5:
+			searchFilm();
 		case 0:
 			break;
 		default:
