@@ -123,13 +123,15 @@ string* CLInterface::inputTitle()
 
 vector<Genre*>* CLInterface::selectGenres()
 {
-	set<Genre*>* existsGenres = reposService.getDB()->getAllGenres();
+	set<Genre*>* existsGenres; 
 	set<int>* selectedIdsGenres = new set<int>();
 	vector<Genre*>* listGenres = new vector<Genre*>();
 
 	int contr = -2;
 
 	while (contr != 0) {
+		existsGenres = reposService.getDB()->getAllGenres();
+
 		cout << "::Genres::" << endl;
 		for (Genre *genre : *existsGenres) {
 			if (selectedIdsGenres->find(genre->getId()) == selectedIdsGenres->end()) {
@@ -181,13 +183,15 @@ vector<Genre*>* CLInterface::selectGenres()
 
 vector<Actor*>* CLInterface::selectActors()
 {
-	set<Actor*>* existsActor = reposService.getDB()->getAllActors();
+	set<Actor*>* existsActor;
 	set<int>* selectedIdsActors = new set<int>();
 	vector<Actor*>* listActros = new vector<Actor*>();
 
 	int contr = -2;
 
 	while (contr != 0) {
+		existsActor = reposService.getDB()->getAllActors();
+
 		cout << "::Actor::" << endl;
 		for (Actor *actor : *existsActor) {
 			if (selectedIdsActors->find(actor->getId()) == selectedIdsActors->end()) {

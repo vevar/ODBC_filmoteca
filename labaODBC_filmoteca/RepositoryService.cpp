@@ -421,7 +421,9 @@ bool RepositoryService::DB::addGenre(Genre genre)
 	SQLHSTMT *handler = createHandler();
 
 	string query = "INSERT INTO genre(genre) VALUES(";
+	query.append("'");
 	query.append(genre.getName());
+	query.append("'");
 	query.append(")");
 
 	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
@@ -447,9 +449,13 @@ bool RepositoryService::DB::addActor(Actor actor)
 	SQLHSTMT *handler = createHandler();
 
 	string query = "INSERT INTO actor(first_name, second_name) VALUES(";
+	query.append("'");
 	query.append(actor.getFirstName());
+	query.append("'");
 	query.append(",");
+	query.append("'");
 	query.append(actor.getSecondName());
+	query.append("'");
 	query.append(")");
 
 	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
