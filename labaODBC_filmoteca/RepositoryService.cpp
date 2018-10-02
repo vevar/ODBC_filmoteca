@@ -396,10 +396,6 @@ bool RepositoryService::DB::addFilm(Film* film)
 	return false;
 }
 
-void RepositoryService::DB::editFilmById(int id)
-{
-
-}
 
 bool RepositoryService::DB::removeFilmById(int id)
 {
@@ -490,6 +486,31 @@ bool RepositoryService::DB::addActor(Actor actor)
 	removeHandler(handler);
 	disconnect();
 
+	return false;
+}
+
+bool RepositoryService::DB::updateTitleById(int id, string title)
+{
+	return false;
+}
+
+bool RepositoryService::DB::updateGenreById(int id, vector<Genre*>* genres)
+{
+	return false;
+}
+
+bool RepositoryService::DB::updateActorById(int id, vector<Actor*>* actors)
+{
+	return false;
+}
+
+bool RepositoryService::DB::updateRatingById(int id, double rating)
+{
+	return false;
+}
+
+bool RepositoryService::DB::updateWatchedById(int id, bool watched)
+{
 	return false;
 }
 

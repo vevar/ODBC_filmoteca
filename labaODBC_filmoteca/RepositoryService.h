@@ -49,14 +49,18 @@ class RepositoryService
 		set<Film*>* getFilmsByRatingAndWathced(int rating, bool watched);
 
 		bool addFilm(Film* film);
-
-		void editFilmById(int id);
-
-		bool removeFilmById(int id);
-		bool removeFilmByTitle(string title);
 		bool addGenre(Genre genre);
 		bool addActor(Actor actor);
 
+		bool updateTitleById(int id, string title);
+		bool updateGenreById(int id, vector<Genre*>* genres);
+		bool updateActorById(int id, vector<Actor*>* actors);
+		bool updateRatingById(int id, double rating);
+		bool updateWatchedById(int id, bool watched);
+
+		bool removeFilmById(int id);
+		bool removeFilmByTitle(string title);
+		
 	};
 
 	DB* db;

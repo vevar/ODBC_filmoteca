@@ -5,13 +5,13 @@
 
 void CLInterface::printFilm(Film film)
 {
-	cout << ":::Film:::" << endl;
+	cout << ":::::::: Film ::::::::" << endl;
 
 	cout << "Id:" << film.getId() << endl;
 
 	cout << "Title: " << *film.getTitle() << endl;
 
-	vector<Genre*>* genres = &*film.getGenres();
+	vector<Genre*>* genres = film.getGenres();
 	cout << "Genres: " << endl;
 	for (Genre* genre : *genres) {
 		cout << '\t' << genre->getName() << endl;
@@ -26,6 +26,8 @@ void CLInterface::printFilm(Film film)
 	cout << "Rating: " << film.getRating() << endl;
 	cout << "Watched: " << film.getWatched() << endl;
 	cout << endl;
+	cout << ":::::::::::::::::::::::::::" << endl;
+
 }
 
 void CLInterface::printFilms(set<Film*>* films)
@@ -196,6 +198,16 @@ int CLInterface::inputIdFilm()
 
 void CLInterface::editFilmTitle()
 {
+	int id;
+	string title;
+	cout << ":::::: Edit title ::::::" << endl;
+	cout << "Input id of film: ";
+	cin >> id;
+	cout << "Input new title: ";
+	cin >> title;
+
+	reposService.getDB()->updateTitleById(id, title);
+
 }
 
 void CLInterface::editFilmGenre()
