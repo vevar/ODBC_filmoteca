@@ -12,6 +12,7 @@ class CLInterface
 	RepositoryService reposService;
 
 	void printFilm(Film film);
+	void printFilms(set<Film*>* film);
 
 	//Kinds of menu
 	void printMenu();

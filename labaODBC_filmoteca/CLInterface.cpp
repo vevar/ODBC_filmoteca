@@ -28,17 +28,32 @@ void CLInterface::printFilm(Film film)
 	cout << endl;
 }
 
+void CLInterface::printFilms(set<Film*>* films)
+{
+	if (films->size() > 0) {
+		for (Film* film : *films) {
+			printFilm(*film);
+		}
+	}
+	else {
+		printMessage(MESSAGE_FILM_NOT_FOUND);
+	}
+}
+
 void CLInterface::printMenu()
 {
-	cout << ":::Menu:::" << endl;
+	cout << ":::::::: Menu ::::::::" << endl;
 
 	cout << "1. Get all films." << endl;
 	cout << "2. Add a film." << endl;
 	cout << "3. Edit a film." << endl;
 	cout << "4. Delete a film" << endl;
 
+
 	cout << endl;
 	cout << "0. Exit." << endl;
+	cout << ":::::::::::::::::::::::::::" << endl;
+
 }
 
 void CLInterface::printFilmEditMenu()
@@ -55,12 +70,13 @@ void CLInterface::printFilmEditMenu()
 
 void CLInterface::printSearchMenu()
 {
-	cout << "::: Search menu :::" << endl;
+	cout << ":::::::: Search menu ::::::::" << endl;
 
 	cout << "1. Search by title" << endl;
 	cout << "2. Search by genre" << endl;
 	cout << "3. Search by actor" << endl;
 	cout << "4. Search by rating(not watched)" << endl;
+	cout << ":::::::::::::::::::::::::::" << endl;
 }
 
 void CLInterface::printAllFilms()
@@ -119,7 +135,7 @@ void CLInterface::editFilm()
 	case 5:
 		editFilmWatched();
 	default:
-		cout << "Incorrect input!!!" << endl;
+		printMessage(MESSAGE_INCORRECT_INPUT);
 		break;
 	}
 }
@@ -201,14 +217,8 @@ void CLInterface::searchByTitle()
 	cin >> title;
 
 	set<Film*>* films = reposService.getDB()->getFilmsByTitle(title);
-	if (films->size() > 0) {
-		for (Film* film : *films) {
-			printFilm(*film);
-		}
-	}
-	else {
-		printMessage(MESSAGE_FILM_NOT_FOUND);
-	}
+
+	printFilms(films);
 }
 
 void CLInterface::searchByGenre()
@@ -219,22 +229,36 @@ void CLInterface::searchByGenre()
 	cin >> genre;
 
 	set<Film*>* films = reposService.getDB()->getFilmsByGenre(genre);
-	if (films->size() > 0) {
-		for (Film* film : *films) {
-			printFilm(*film);
-		}
-	}
-	else {
-		printMessage(MESSAGE_FILM_NOT_FOUND);
-	}
+
+	printFilms(films);
+	
 }
 
 void CLInterface::searchByActor()
 {
+	string firstNameActor, secondNameActor;
+	
+	cout << "Input firstname of actor: ";
+	cin >> firstNameActor;
+	cout << "Input secondname of actor: ";
+	cin >> secondNameActor;
+
+	set<Film*>* films = reposService.getDB()->getFilmsByActor(Actor(firstNameActor, secondNameActor));
+
+	printFilms(films);
+
 }
 
 void CLInterface::searchByRatingNotWatched()
 {
+	double rating;
+
+	cout << "Input rating (more than): ";
+	cin >> rating;
+
+	set<Film*>* films = reposService.getDB()->getFilmsByRatingAndWathced(rating, false);
+
+	printFilms(films);
 }
 
 void CLInterface::printMessage(const char * str)
