@@ -67,6 +67,9 @@ void CLInterface::printFilmEditMenu()
 	cout << "3. Edit actros" << endl;
 	cout << "4. Edit rating" << endl;
 	cout << "5. Edit watched" << endl;
+	cout << endl;
+
+	cout << "0. Exit" << endl;
 	cout << ":::::::::::::::::::::::::::" << endl;
 }
 
@@ -78,6 +81,9 @@ void CLInterface::printSearchMenu()
 	cout << "2. Search by genre" << endl;
 	cout << "3. Search by actor" << endl;
 	cout << "4. Search by rating(not watched)" << endl;
+	cout << endl;
+
+	cout << "0. Exit" << endl;
 	cout << ":::::::::::::::::::::::::::" << endl;
 }
 
@@ -88,11 +94,6 @@ void CLInterface::printAllFilms()
 	for (Film* film : *films) {
 		printFilm(*film);
 	}
-}
-
-void CLInterface::printFilm()
-{
-
 }
 
 void CLInterface::addFilm()
@@ -136,6 +137,8 @@ void CLInterface::editFilm()
 		break;
 	case 5:
 		editFilmWatched();
+	case 0:
+		break;
 	default:
 		printMessage(MESSAGE_INCORRECT_INPUT);
 		break;
@@ -149,7 +152,9 @@ void CLInterface::removeFilm()
 	int id = inputIdFilm();
 
 	if (id != -1)
-		reposService.getDB()->removeFilmById(id);
+		if (!reposService.getDB()->removeFilmById(id)) {
+			printMessage(MESSAGE_ERROR_DELETE);
+		}
 }
 
 void CLInterface::searchFilm()
@@ -158,7 +163,7 @@ void CLInterface::searchFilm()
 
 	int cont = 0;
 	printSearchMenu();
-	
+
 	cin >> cont;
 
 	switch (cont)
@@ -174,6 +179,8 @@ void CLInterface::searchFilm()
 		break;
 	case 4:
 		searchByRatingNotWatched();
+		break;
+	case 0:
 		break;
 	default:
 		printMessage(MESSAGE_INCORRECT_INPUT);
@@ -198,16 +205,17 @@ int CLInterface::inputIdFilm()
 void CLInterface::editFilmTitle()
 {
 	int id;
-	string title;
+	string *title;
 	cout << ":::::: Edit title ::::::" << endl;
 	cout << "Input id of film: ";
 	cin >> id;
-	cout << "Input new title: ";
-	cin >> title;
+	title = inputTitle();
 
-	reposService.getDB()->updateTitleById(id, title);
+	if (!reposService.getDB()->updateTitleById(id, *title)) {
+		printMessage(MESSAGE_ERROR_UPDATE);
+	}
 	cout << ":::::::::::::::::::::::::::" << endl;
-
+	delete title;
 }
 
 void CLInterface::editFilmGenre()
@@ -219,9 +227,10 @@ void CLInterface::editFilmGenre()
 	cout << "Select new genres: " << endl;
 	vector<Genre*>* genres = selectGenres();
 
-	reposService.getDB()->updateGenreById(id, genres);
+	if (!reposService.getDB()->updateGenreById(id, genres)) {
+		printMessage(MESSAGE_ERROR_UPDATE);
+	}
 	cout << ":::::::::::::::::::::::::::" << endl;
-	delete genres;
 }
 
 void CLInterface::editFilmActor()
@@ -233,9 +242,10 @@ void CLInterface::editFilmActor()
 	cout << "Select new actors: " << endl;
 	vector<Actor*>* actors = selectActors();
 
-	reposService.getDB()->updateActorById(id, actors);
+	if (!reposService.getDB()->updateActorById(id, actors)) {
+		printMessage(MESSAGE_ERROR_UPDATE);
+	}
 	cout << ":::::::::::::::::::::::::::" << endl;
-	delete actors;
 }
 
 void CLInterface::editFilmRating()
@@ -245,9 +255,11 @@ void CLInterface::editFilmRating()
 	cout << ":::::: Edit rating ::::::" << endl;
 	cout << "Input id of film: ";
 	cin >> id;
-	cout << "Input new rating: ";
-	cin >> rating;
-	reposService.getDB()->updateRatingById(id, rating);
+	
+	rating = selectRating();
+	if (!reposService.getDB()->updateRatingById(id, rating)) {
+		printMessage(MESSAGE_ERROR_UPDATE);
+	}
 	cout << ":::::::::::::::::::::::::::" << endl;
 }
 
@@ -258,16 +270,18 @@ void CLInterface::editFilmWatched()
 	cout << ":::::: Edit watched ::::::" << endl;
 	cout << "Input id of film: ";
 	cin >> id;
-	cout << "Input new watched: ";
-	cin >> watched;
-	reposService.getDB()->updateWatchedById(id, watched);
+	watched = selectWatched();
+
+	if (!reposService.getDB()->updateWatchedById(id, watched)) {
+		printMessage(MESSAGE_ERROR_UPDATE);
+	}
 	cout << ":::::::::::::::::::::::::::" << endl;
 }
 
 void CLInterface::searchByTitle()
 {
 	string title;
-	
+
 	cout << "Input title: ";
 	cin >> title;
 
@@ -286,13 +300,13 @@ void CLInterface::searchByGenre()
 	set<Film*>* films = reposService.getDB()->getFilmsByGenre(genre);
 
 	printFilms(films);
-	
+
 }
 
 void CLInterface::searchByActor()
 {
 	string firstNameActor, secondNameActor;
-	
+
 	cout << "Input firstname of actor: ";
 	cin >> firstNameActor;
 	cout << "Input secondname of actor: ";
@@ -323,13 +337,14 @@ void CLInterface::printMessage(const char * str)
 
 string* CLInterface::inputTitle()
 {
-	string* title = new string();
+	char title[BUFFER_SIZE];
 
 	while (true)
 	{
 		cout << "Title: " << endl;
-		cin >> *title;
-		if (title->size() == 0) {
+		cin.ignore();
+		cin.getline(title, BUFFER_SIZE);
+		if ( sizeof(title)/sizeof(*title) == 0) {
 		}
 		else {
 			break;
@@ -337,7 +352,7 @@ string* CLInterface::inputTitle()
 		cout << endl;
 	}
 
-	return title;
+	return new string (title);
 }
 
 vector<Genre*>* CLInterface::selectGenres()
@@ -558,6 +573,7 @@ void CLInterface::run()
 			break;
 		case 5:
 			searchFilm();
+			break;
 		case 0:
 			break;
 		default:

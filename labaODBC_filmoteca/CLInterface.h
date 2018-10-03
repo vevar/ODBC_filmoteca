@@ -5,6 +5,10 @@
 #define MESSAGE_FILM_NOT_FOUND "Film not found."
 #define MESSAGE_INCORRECT_INPUT "Incorrect input."
 
+#define MESSAGE_ERROR_UPDATE "Error update."
+#define MESSAGE_ERROR_INSERT "Error insert."
+#define MESSAGE_ERROR_DELETE "Errro delete."
+
 using namespace std;
 
 class CLInterface
@@ -21,7 +25,6 @@ class CLInterface
 
 	//Menu functins
 	void printAllFilms();
-	void printFilm();
 	void addFilm();
 	void editFilm();
 	void removeFilm();

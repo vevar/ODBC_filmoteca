@@ -491,26 +491,171 @@ bool RepositoryService::DB::addActor(Actor actor)
 
 bool RepositoryService::DB::updateTitleById(int id, string title)
 {
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "UPDATE film SET title = ";
+	query.append("'");
+	query.append(title);
+	query.append("' ");
+	query.append("WHERE id = ");
+	char idStr[BUFFER_SIZE];
+	_itoa_s(id, idStr, BUFFER_SIZE, 10);
+	query.append(idStr);
+
+	
+	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
+		return true;
+	}
+
+	removeHandler(handler);
+	disconnect();
+
 	return false;
 }
 
 bool RepositoryService::DB::updateGenreById(int id, vector<Genre*>* genres)
 {
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	Film film;
+	film.setGenres(genres);
+
+	string query = "UPDATE film SET genres = ";
+	query.append("'");
+	query.append(film.getGenresIds());
+	query.append("' ");
+	query.append("WHERE id = ");
+	char idStr[BUFFER_SIZE];
+	_itoa_s(id, idStr, BUFFER_SIZE, 10);
+	query.append(idStr);
+
+
+	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
+		return true;
+	}
+
+	removeHandler(handler);
+	disconnect();
+
 	return false;
 }
 
 bool RepositoryService::DB::updateActorById(int id, vector<Actor*>* actors)
 {
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	Film film;
+	film.setActors(actors);
+
+	string query = "UPDATE film SET actors = ";
+	query.append("'");
+	query.append(film.getActorsIds());
+	query.append("' ");
+	query.append("WHERE id = ");
+	char idStr[BUFFER_SIZE];
+	_itoa_s(id, idStr, BUFFER_SIZE, 10);
+	query.append(idStr);
+
+
+	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
+		return true;
+	}
+
+	removeHandler(handler);
+	disconnect();
+
 	return false;
 }
 
 bool RepositoryService::DB::updateRatingById(int id, double rating)
 {
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "UPDATE film SET rating = ";
+	char tmpRating[BUFFER_SIZE];
+	_itoa_s(rating, tmpRating, BUFFER_SIZE, 10);
+
+	query.append(tmpRating);
+	query.append(" WHERE id = ");
+	char idStr[BUFFER_SIZE];
+	_itoa_s(id, idStr, BUFFER_SIZE, 10);
+	query.append(idStr);
+
+
+	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
+		return true;
+	}
+
+	removeHandler(handler);
+	disconnect();
+
 	return false;
 }
 
 bool RepositoryService::DB::updateWatchedById(int id, bool watched)
 {
+	if (!connection()) {
+		return false;
+	}
+
+	SQLHSTMT *handler = createHandler();
+
+	string query = "UPDATE film SET watched = ";
+	
+	if (watched)
+		query.append("true");
+	else
+		query.append("false");
+
+	query.append(" WHERE id = ");
+	char idStr[BUFFER_SIZE];
+	_itoa_s(id, idStr, BUFFER_SIZE, 10);
+	query.append(idStr);
+
+
+	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
+
+	if (retcode == SQL_SUCCESS) {
+		removeHandler(handler);
+		disconnect();
+		return true;
+	}
+
+	removeHandler(handler);
+	disconnect();
+
 	return false;
 }
 
