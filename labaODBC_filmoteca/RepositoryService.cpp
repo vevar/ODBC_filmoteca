@@ -241,12 +241,12 @@ set<Film*>* RepositoryService::DB::getFilmsByTitle(string title)
 	return nullptr;
 }
 
-set<Film*>* RepositoryService::DB::getFilmsByGenre(string genre)
+set<Film*>* RepositoryService::DB::getFilmsByGenres(vector<Genre*>* genres)
 {
 	return nullptr;
 }
 
-set<Film*>* RepositoryService::DB::getFilmsByActor(Actor actor)
+set<Film*>* RepositoryService::DB::getFilmsByActors(vector<Actor*>* actors)
 {
 	return nullptr;
 }

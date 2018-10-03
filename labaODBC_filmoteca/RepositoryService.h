@@ -44,8 +44,8 @@ class RepositoryService
 		set<Actor*>* getAllActors();
 
 		set<Film*>* getFilmsByTitle(string title);
-		set<Film*>* getFilmsByGenre(string genre);
-		set<Film*>* getFilmsByActor(Actor actor);
+		set<Film*>* getFilmsByGenres(vector<Genre*>* genres);
+		set<Film*>* getFilmsByActors(vector<Actor*>* actors);
 		set<Film*>* getFilmsByRatingAndWathced(int rating, bool watched);
 
 		bool addFilm(Film* film);

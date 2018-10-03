@@ -280,54 +280,47 @@ void CLInterface::editFilmWatched()
 
 void CLInterface::searchByTitle()
 {
-	string title;
+	string *title;
 
-	cout << "Input title: ";
-	cin >> title;
+	title = inputTitle();
 
-	set<Film*>* films = reposService.getDB()->getFilmsByTitle(title);
+	set<Film*>* films = reposService.getDB()->getFilmsByTitle(*title);
 
 	printFilms(films);
+	delete films;
 }
 
 void CLInterface::searchByGenre()
 {
-	string genre;
 
-	cout << "Input genre: ";
-	cin >> genre;
+	vector<Genre*>* genres = selectGenres();
 
-	set<Film*>* films = reposService.getDB()->getFilmsByGenre(genre);
+	set<Film*>* films = reposService.getDB()->getFilmsByGenres(genres);
 
 	printFilms(films);
-
+	delete films;
+	delete genres;
 }
 
 void CLInterface::searchByActor()
 {
-	string firstNameActor, secondNameActor;
+	vector<Actor*>* actors = selectActors();
 
-	cout << "Input firstname of actor: ";
-	cin >> firstNameActor;
-	cout << "Input secondname of actor: ";
-	cin >> secondNameActor;
-
-	set<Film*>* films = reposService.getDB()->getFilmsByActor(Actor(firstNameActor, secondNameActor));
+	set<Film*>* films = reposService.getDB()->getFilmsByActors(actors);
 
 	printFilms(films);
-
+	delete films;
+	delete actors;
 }
 
 void CLInterface::searchByRatingNotWatched()
 {
-	double rating;
-
-	cout << "Input rating (more than): ";
-	cin >> rating;
+	double rating = selectRating();
 
 	set<Film*>* films = reposService.getDB()->getFilmsByRatingAndWathced(rating, false);
 
 	printFilms(films);
+	delete films;
 }
 
 void CLInterface::printMessage(const char * str)
