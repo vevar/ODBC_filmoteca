@@ -238,22 +238,321 @@ set<Actor*>* RepositoryService::DB::getAllActors()
 
 set<Film*>* RepositoryService::DB::getFilmsByTitle(string title)
 {
-	return nullptr;
+	if (!connection()) {
+		return nullptr;
+	}
+
+	set<Film*> *listFilms = new set<Film*>();
+
+	string query = "SELECT id, title, genres, actors, rating, watched  FROM film WHERE lower(title) = lower(";
+	query.append("'");
+	query.append(title);
+	query.append("'");
+	query.append(")");
+	
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
+
+	if (retcode != SQL_SUCCESS) {
+		removeHandler(hstmt);
+		disconnect();
+
+		return nullptr;
+	}
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			Film *film = new Film();
+			SQLCHAR buffer[BUFFER_SIZE];
+
+			//id
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+			film->setId(atoi((const char *)buffer));
+
+			//title
+			SQLGetData(*hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
+			film->setTitle(new string((const char*)buffer));
+
+			//genres
+			SQLGetData(*hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
+			film->setGenres(getGenres((const char*)buffer));
+
+			//actors
+			SQLGetData(*hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
+			film->setActors(getActors((const char *)buffer));
+
+			//rating
+			SQLGetData(*hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
+			film->setRating(atof((const char*)buffer));
+
+			//watched
+			SQLGetData(*hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
+			bool isWatched;
+			if (buffer[0] == '1') {
+				isWatched = true;
+			}
+			else {
+				isWatched = false;
+			}
+			film->setWatched(isWatched);
+
+			listFilms->insert(film);
+		}
+		else {
+			break;
+		}
+	}
+
+	removeHandler(hstmt);
+	disconnect();
+
+	return listFilms;
 }
 
 set<Film*>* RepositoryService::DB::getFilmsByGenres(vector<Genre*>* genres)
 {
-	return nullptr;
+	if (!connection()) {
+		return nullptr;
+	}
+
+	set<Film*> *listFilms = new set<Film*>();
+
+	string query = "SELECT id, title, genres, actors, rating, watched  FROM film WHERE ";
+	char tmpId[BUFFER_SIZE];
+
+	for (Genre* genre : *genres) {
+		_itoa_s(genre->getId(), tmpId, BUFFER_SIZE, 10);
+		query.append(tmpId);
+		query.append(" = ANY(genres) ");
+		if (genre != genres->back()) {
+			query.append(" OR ");
+		}
+	}
+
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
+
+	if (retcode != SQL_SUCCESS) {
+		removeHandler(hstmt);
+		disconnect();
+
+		return nullptr;
+	}
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			Film *film = new Film();
+			SQLCHAR buffer[BUFFER_SIZE];
+
+			//id
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+			film->setId(atoi((const char *)buffer));
+
+			//title
+			SQLGetData(*hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
+			film->setTitle(new string((const char*)buffer));
+
+			//genres
+			SQLGetData(*hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
+			film->setGenres(getGenres((const char*)buffer));
+
+			//actors
+			SQLGetData(*hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
+			film->setActors(getActors((const char *)buffer));
+
+			//rating
+			SQLGetData(*hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
+			film->setRating(atof((const char*)buffer));
+
+			//watched
+			SQLGetData(*hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
+			bool isWatched;
+			if (buffer[0] == '1') {
+				isWatched = true;
+			}
+			else {
+				isWatched = false;
+			}
+			film->setWatched(isWatched);
+
+			listFilms->insert(film);
+		}
+		else {
+			break;
+		}
+	}
+
+	removeHandler(hstmt);
+	disconnect();
+
+	return listFilms;
 }
 
 set<Film*>* RepositoryService::DB::getFilmsByActors(vector<Actor*>* actors)
 {
-	return nullptr;
+	if (!connection()) {
+		return nullptr;
+	}
+
+	set<Film*> *listFilms = new set<Film*>();
+
+	string query = "SELECT id, title, genres, actors, rating, watched  FROM film WHERE ";
+	char tmpId[BUFFER_SIZE];
+
+	for (Actor* actor : *actors) {
+		_itoa_s(actor->getId(), tmpId, BUFFER_SIZE, 10);
+		query.append(tmpId);
+		query.append(" = ANY(actors) ");
+		if (actor != actors->back()) {
+			query.append(" OR ");
+		}
+	}
+
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
+
+	if (retcode != SQL_SUCCESS) {
+		removeHandler(hstmt);
+		disconnect();
+
+		return nullptr;
+	}
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			Film *film = new Film();
+			SQLCHAR buffer[BUFFER_SIZE];
+
+			//id
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+			film->setId(atoi((const char *)buffer));
+
+			//title
+			SQLGetData(*hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
+			film->setTitle(new string((const char*)buffer));
+
+			//genres
+			SQLGetData(*hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
+			film->setGenres(getGenres((const char*)buffer));
+
+			//actors
+			SQLGetData(*hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
+			film->setActors(getActors((const char *)buffer));
+
+			//rating
+			SQLGetData(*hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
+			film->setRating(atof((const char*)buffer));
+
+			//watched
+			SQLGetData(*hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
+			bool isWatched;
+			if (buffer[0] == '1') {
+				isWatched = true;
+			}
+			else {
+				isWatched = false;
+			}
+			film->setWatched(isWatched);
+
+			listFilms->insert(film);
+		}
+		else {
+			break;
+		}
+	}
+
+	removeHandler(hstmt);
+	disconnect();
+
+	return listFilms;
 }
 
 set<Film*>* RepositoryService::DB::getFilmsByRatingAndWathced(int rating, bool watched)
 {
-	return nullptr;
+	if (!connection()) {
+		return nullptr;
+	}
+
+	set<Film*> *listFilms = new set<Film*>();
+
+	string query = "SELECT id, title, genres, actors, rating, watched  FROM film WHERE ";
+	
+	query.append(" rating >= ");
+	char tmpRating[BUFFER_SIZE];
+	_itoa_s(rating, tmpRating, 10);
+	query.append(tmpRating);
+
+	query.append(" AND watched = ");
+	if (watched)
+		query.append("true");
+	else
+		query.append("false");
+
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
+
+	if (retcode != SQL_SUCCESS) {
+		removeHandler(hstmt);
+		disconnect();
+
+		return nullptr;
+	}
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			Film *film = new Film();
+			SQLCHAR buffer[BUFFER_SIZE];
+
+			//id
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+			film->setId(atoi((const char *)buffer));
+
+			//title
+			SQLGetData(*hstmt, 2, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbTitle);
+			film->setTitle(new string((const char*)buffer));
+
+			//genres
+			SQLGetData(*hstmt, 3, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbGenres);
+			film->setGenres(getGenres((const char*)buffer));
+
+			//actors
+			SQLGetData(*hstmt, 4, SQL_C_CHAR, &buffer, BUFFER_SIZE, &sbActors);
+			film->setActors(getActors((const char *)buffer));
+
+			//rating
+			SQLGetData(*hstmt, 5, SQL_C_CHAR, &buffer, 5, &sbRating);
+			film->setRating(atof((const char*)buffer));
+
+			//watched
+			SQLGetData(*hstmt, 6, SQL_C_CHAR, &buffer, 2, &sbWatched);
+			bool isWatched;
+			if (buffer[0] == '1') {
+				isWatched = true;
+			}
+			else {
+				isWatched = false;
+			}
+			film->setWatched(isWatched);
+
+			listFilms->insert(film);
+		}
+		else {
+			break;
+		}
+	}
+
+	removeHandler(hstmt);
+	disconnect();
+
+	return listFilms;
 }
 
 string RepositoryService::DB::addIdsToQuery(string query, vector<string> listIds)
