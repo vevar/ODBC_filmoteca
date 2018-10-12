@@ -542,6 +542,8 @@ void CLInterface::addNewActor()
 
 void CLInterface::run()
 {
+	cout << "::: Welcome to Filmoteca ! :::" << endl;
+
 	int cont = -1;
 
 	while (cont != 0)

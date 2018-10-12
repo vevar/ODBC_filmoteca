@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "Film.h"
 
+const char* Film::TABLE_NAME = "film";
+const char* Film::TABLE_FIELD_ID = "id";
+const char* Film::TABLE_FIELD_TITLE = "title";
+const char* Film::TABLE_FIELD_ACTOR = "actor";
+const char* Film::TABLE_FIELD_GENRE = "genre";
 
 Film::Film()
 {

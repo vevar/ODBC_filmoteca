@@ -158,7 +158,7 @@ set<Genre*>* RepositoryService::DB::getAllGenres()
 
 	SQLHSTMT *handler = createHandler();
 
-	string query = "SELECT * FROM genre";
+	string query = "SELECT id, genre FROM genre";
 	set<Genre*>* genres = new set<Genre*>;
 
 	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
@@ -201,7 +201,7 @@ set<Actor*>* RepositoryService::DB::getAllActors()
 
 	SQLHSTMT *handler = createHandler();
 
-	string query = "SELECT * FROM actor";
+	string query = "SELECT id, first_name, second_name FROM actor";
 	set<Actor*>* actors = new set<Actor*>;
 
 	retcode = SQLExecDirectA(*handler, (SQLCHAR*)query.c_str(), SQL_NTS);
@@ -249,7 +249,7 @@ set<Film*>* RepositoryService::DB::getFilmsByTitle(string title)
 	query.append(title);
 	query.append("'");
 	query.append(")");
-	
+
 	SQLHSTMT* hstmt = createHandler();
 	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
 	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
@@ -482,7 +482,7 @@ set<Film*>* RepositoryService::DB::getFilmsByRatingAndWathced(int rating, bool w
 	set<Film*> *listFilms = new set<Film*>();
 
 	string query = "SELECT id, title, genres, actors, rating, watched  FROM film WHERE ";
-	
+
 	query.append(" rating >= ");
 	char tmpRating[BUFFER_SIZE];
 	_itoa_s(rating, tmpRating, 10);
@@ -573,6 +573,231 @@ string RepositoryService::DB::addIdsToQuery(string query, vector<string> listIds
 	}
 
 	return query;
+}
+
+bool RepositoryService::DB::checkTablesDataBase()
+{
+	if (!connection()) {
+		return false;
+	}
+
+	bool isTableReady = checkFilmTable() && checkActorTable() && checkGenreTable();
+
+	disconnect();
+
+	return isTableReady;
+}
+
+bool RepositoryService::DB::checkFilmTable()
+{
+	if (checkTableExist(Film::TABLE_NAME)) {
+
+		if (checkFilmFields()) {
+			return true;
+		}
+		else
+		{
+
+
+			return false;
+		}
+		
+	}
+	else
+	{
+
+	}
+	
+
+	return flag;
+}
+
+bool RepositoryService::DB::checkGenreTable()
+{
+	string query = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'genre'";
+
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
+
+	vector<string> listColumns;
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			SQLCHAR buffer[BUFFER_SIZE];
+
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+			listColumns.push_back((char *)buffer);
+		}
+		else {
+			break;
+		}
+	}
+
+	bool flag = false;
+
+	for (int i = 0; i < listColumns.size(); i++)
+	{
+		flag = false;
+		if (listColumns.at(i) == Genre::TABLE_FIELD_ID) {
+			flag = true;
+		}
+		else if (listColumns.at(i) == Genre::TABLE_FIELD_NAME) {
+			flag = true;
+		}
+
+		if (!flag)
+		{
+			break;
+		}
+	}
+
+	removeHandler(hstmt);
+
+	return flag;
+}
+
+bool RepositoryService::DB::checkActorTable()
+{
+	string query = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'actor'";
+
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
+
+	vector<string> listColumns;
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			SQLCHAR buffer[BUFFER_SIZE];
+
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+			listColumns.push_back((char *)buffer);
+		}
+		else {
+			break;
+		}
+	}
+
+	bool flag = false;
+
+	for (int i = 0; i < listColumns.size(); i++)
+	{
+		flag = false;
+
+		if (listColumns.at(i) == Actor::TABLE_FIELD_ID) {
+			flag = true;
+		}
+		else if (listColumns.at(i) == Actor::TABLE_FIELD_FIRSTNAME) {
+			flag = true;
+		}
+		else if (listColumns.at(i) == Actor::TABLE_FIELD_SECONDNAME) {
+			flag = true;
+		}
+
+		if (!flag)
+		{
+			break;
+		}
+	}
+
+	removeHandler(hstmt);
+
+	return flag;
+}
+
+bool RepositoryService::DB::checkFilmFields()
+{
+	string query = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'film'";
+
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
+
+	vector<string> listColumns;
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			SQLCHAR buffer[BUFFER_SIZE];
+
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
+			listColumns.push_back((char *)buffer);
+		}
+		else {
+			break;
+		}
+	}
+	bool flag;
+
+	for (int i = 0; i < listColumns.size(); i++)
+	{
+		flag = false;
+		if (listColumns.at(i) == Film::TABLE_FIELD_ID) {
+			flag = true;
+		}
+		else if (listColumns.at(i) == Film::TABLE_FIELD_TITLE) {
+			flag = true;
+		}
+		else if (listColumns.at(i) == Film::TABLE_FIELD_GENRE) {
+			flag = true;
+		}
+		else if (listColumns.at(i) == Film::TABLE_FIELD_ACTOR) {
+			flag = true;
+		}
+
+		if (!flag)
+		{
+			break;
+		}
+	}
+
+	removeHandler(hstmt);
+
+	return flag;
+}
+
+bool RepositoryService::DB::checkGenreFields()
+{
+	return false;
+}
+
+bool RepositoryService::DB::checkActorFields()
+{
+	return false;
+}
+
+bool RepositoryService::DB::checkTableExist(string nameTable)
+{
+	string query = "SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '";
+	query.append(nameTable);
+	query.append("'");
+
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN  sbTableName;
+
+	while (TRUE) {
+		retcode = SQLFetch(*hstmt);
+		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
+			SQLCHAR buffer[BUFFER_SIZE];
+
+			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbTableName);
+			if (nameTable.compare(string((const char*)buffer))) {
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else {
+			break;
+		}
+	}
+	return false;
 }
 
 set<Film*>* RepositoryService::DB::getAllFilm()
@@ -805,7 +1030,7 @@ bool RepositoryService::DB::updateTitleById(int id, string title)
 	_itoa_s(id, idStr, BUFFER_SIZE, 10);
 	query.append(idStr);
 
-	
+
 	retcode = SQLExecDirectA(*handler, (SQLCHAR *)query.c_str(), SQL_NTS);
 
 	if (retcode == SQL_SUCCESS) {
@@ -932,7 +1157,7 @@ bool RepositoryService::DB::updateWatchedById(int id, bool watched)
 	SQLHSTMT *handler = createHandler();
 
 	string query = "UPDATE film SET watched = ";
-	
+
 	if (watched)
 		query.append("true");
 	else

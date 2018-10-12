@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 class Film
 {
 	int id;
@@ -15,7 +14,14 @@ class Film
 	double rating;
 	bool watched;
 
+
 public:
+	static const char* TABLE_NAME;
+	static const char* TABLE_FIELD_ID;
+	static const char* TABLE_FIELD_TITLE;
+	static const char* TABLE_FIELD_GENRE;
+	static const char* TABLE_FIELD_ACTOR;
+
 	Film();
 	Film(int id, string* title, vector<Genre*>* genres,
 		vector<Actor*>* actors, double rating, bool watched);

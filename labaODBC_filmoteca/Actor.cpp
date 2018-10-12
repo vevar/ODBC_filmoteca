@@ -2,6 +2,10 @@
 #include "Actor.h"
 
 
+const char* Actor::TABLE_FIELD_ID = "id";
+const char* Actor::TABLE_FIELD_FIRSTNAME = "first_name";
+const char* Actor::TABLE_FIELD_SECONDNAME = "second_name";
+
 Actor::Actor()
 {
 }

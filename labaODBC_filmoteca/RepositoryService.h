@@ -7,6 +7,7 @@ using namespace std;
 
 #define BUFFER_SIZE 255
 
+
 class RepositoryService
 {
 	class DB {
@@ -31,6 +32,19 @@ class RepositoryService
 		vector<Actor*>* getActors(string idsActors);
 
 		string addIdsToQuery(string query, vector<string> listIds);
+
+		bool checkTablesDataBase();
+
+		bool checkFilmTable();
+		bool checkGenreTable();
+		bool checkActorTable();
+
+		bool checkFilmFields();
+		bool checkGenreFields();
+		bool checkActorFields();
+
+		bool checkTableExist(string nameTable);
+
 
 	public:
 
@@ -61,6 +75,7 @@ class RepositoryService
 		bool removeFilmById(int id);
 		bool removeFilmByTitle(string title);
 		
+		bool checkTablesDataBase();
 	};
 
 	DB* db;

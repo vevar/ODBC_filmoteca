@@ -2,6 +2,9 @@
 #include "Genre.h"
 
 
+const char* Genre::TABLE_FIELD_ID = "id";
+const char* Genre::TABLE_FIELD_NAME = "name";
+
 Genre::Genre()
 {
 }
