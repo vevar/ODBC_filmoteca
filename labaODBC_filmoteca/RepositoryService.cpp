@@ -589,7 +589,7 @@ bool RepositoryService::DB::checkTablesDataBase()
 }
 
 bool RepositoryService::DB::checkFilmTable()
-{
+{	
 	if (checkTableExist(Film::TABLE_NAME)) {
 
 		if (checkFilmFields()) {
@@ -597,19 +597,15 @@ bool RepositoryService::DB::checkFilmTable()
 		}
 		else
 		{
-
-
 			return false;
-		}
-		
+		}	
 	}
 	else
 	{
-
+		createTableFilm();
 	}
 	
-
-	return flag;
+	return true;
 }
 
 bool RepositoryService::DB::checkGenreTable()
@@ -798,6 +794,26 @@ bool RepositoryService::DB::checkTableExist(string nameTable)
 		}
 	}
 	return false;
+}
+
+void RepositoryService::DB::createTableFilm()
+{
+	string query = "CREATE TABLE ";
+	query.append(Film::TABLE_NAME);
+	query.append(" (id INTEGER, title TEXT, genres INTEGER[], actors INTEGER[], rating INTEGER, watched BOOL)");
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN sbCreate;
+	
+	if (retcode !=SQL_SUCCESS)
+	{
+
+	} else {
+
+	}
+
+	removeHandler(hstmt);
+	disconnect();
 }
 
 set<Film*>* RepositoryService::DB::getAllFilm()

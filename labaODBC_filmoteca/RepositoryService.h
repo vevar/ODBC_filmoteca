@@ -45,6 +45,8 @@ class RepositoryService
 
 		bool checkTableExist(string nameTable);
 
+		void createTableFilm();
+
 
 	public:
 
