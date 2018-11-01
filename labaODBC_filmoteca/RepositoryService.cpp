@@ -32,7 +32,7 @@ SQLRETURN RepositoryService::DB::getCodeReturn()
 
 bool RepositoryService::DB::connection()
 {
-	retcode = SQLConnectA(hdbc, (SQLCHAR*) "PostgreSQL35W", SQL_NTS,
+	retcode = SQLConnectA(hdbc, (SQLCHAR*) "PostgreSQL30", SQL_NTS,
 		(SQLCHAR*)NULL, 0,
 		(SQLCHAR*)NULL, 0);
 
@@ -592,116 +592,46 @@ bool RepositoryService::DB::checkFilmTable()
 {	
 	if (checkTableExist(Film::TABLE_NAME)) {
 
-		if (checkFilmFields()) {
+		return true;
+		/*if (checkFilmFields()) {
 			return true;
 		}
 		else
 		{
 			return false;
-		}	
+		}	*/
 	}
 	else
 	{
-		createTableFilm();
+		return createTableFilm();
 	}
 	
-	return true;
 }
 
 bool RepositoryService::DB::checkGenreTable()
 {
-	string query = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'genre'";
-
-	SQLHSTMT* hstmt = createHandler();
-	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
-	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
-
-	vector<string> listColumns;
-
-	while (TRUE) {
-		retcode = SQLFetch(*hstmt);
-		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-			SQLCHAR buffer[BUFFER_SIZE];
-
-			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
-			listColumns.push_back((char *)buffer);
-		}
-		else {
-			break;
-		}
-	}
-
-	bool flag = false;
-
-	for (int i = 0; i < listColumns.size(); i++)
+	if (checkTableExist(Genre::TABLE_NAME))
 	{
-		flag = false;
-		if (listColumns.at(i) == Genre::TABLE_FIELD_ID) {
-			flag = true;
-		}
-		else if (listColumns.at(i) == Genre::TABLE_FIELD_NAME) {
-			flag = true;
-		}
-
-		if (!flag)
-		{
-			break;
-		}
+		return true;
 	}
+	else
+	{
+		return createTableGenre();
+	}
+	
 
-	removeHandler(hstmt);
-
-	return flag;
 }
 
 bool RepositoryService::DB::checkActorTable()
 {
-	string query = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'actor'";
-
-	SQLHSTMT* hstmt = createHandler();
-	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
-	SQLLEN  sbId, sbTitle, sbGenres, sbActors, sbRating, sbWatched;
-
-	vector<string> listColumns;
-
-	while (TRUE) {
-		retcode = SQLFetch(*hstmt);
-		if (retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO) {
-			SQLCHAR buffer[BUFFER_SIZE];
-
-			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbId);
-			listColumns.push_back((char *)buffer);
-		}
-		else {
-			break;
-		}
-	}
-
-	bool flag = false;
-
-	for (int i = 0; i < listColumns.size(); i++)
+	if (checkTableExist(Actor::TABLE_NAME))
 	{
-		flag = false;
-
-		if (listColumns.at(i) == Actor::TABLE_FIELD_ID) {
-			flag = true;
-		}
-		else if (listColumns.at(i) == Actor::TABLE_FIELD_FIRSTNAME) {
-			flag = true;
-		}
-		else if (listColumns.at(i) == Actor::TABLE_FIELD_SECONDNAME) {
-			flag = true;
-		}
-
-		if (!flag)
-		{
-			break;
-		}
+		return true;
 	}
-
-	removeHandler(hstmt);
-
-	return flag;
+	else
+	{
+		return createTableActor();
+	}
 }
 
 bool RepositoryService::DB::checkFilmFields()
@@ -781,11 +711,13 @@ bool RepositoryService::DB::checkTableExist(string nameTable)
 			SQLCHAR buffer[BUFFER_SIZE];
 
 			SQLGetData(*hstmt, 1, SQL_CHAR, &buffer, BUFFER_SIZE, &sbTableName);
-			if (nameTable.compare(string((const char*)buffer))) {
+			if (nameTable.compare(string((const char*)buffer)) == 0) {
+				removeHandler(hstmt);
 				return true;
 			}
 			else
 			{
+				removeHandler(hstmt);
 				return false;
 			}
 		}
@@ -793,10 +725,11 @@ bool RepositoryService::DB::checkTableExist(string nameTable)
 			break;
 		}
 	}
+	removeHandler(hstmt);
 	return false;
 }
 
-void RepositoryService::DB::createTableFilm()
+bool RepositoryService::DB::createTableFilm()
 {
 	string query = "CREATE TABLE ";
 	query.append(Film::TABLE_NAME);
@@ -805,15 +738,56 @@ void RepositoryService::DB::createTableFilm()
 	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
 	SQLLEN sbCreate;
 	
+	removeHandler(hstmt);
+
 	if (retcode !=SQL_SUCCESS)
 	{
-
-	} else {
-
+		return false;
 	}
+	else
+	{
+		return true;
+	}
+}
+
+bool RepositoryService::DB::createTableGenre()
+{
+	string query = "CREATE TABLE ";
+	query.append(Genre::TABLE_NAME);
+	query.append(" (id INTEGER, genre TEXT)");
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN sbCreate;
 
 	removeHandler(hstmt);
-	disconnect();
+
+	if (retcode != SQL_SUCCESS)
+	{
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+bool RepositoryService::DB::createTableActor()
+{
+	string query = "CREATE TABLE ";
+	query.append(Actor::TABLE_NAME);
+	query.append(" (id INTEGER, first_name TEXT, second_name TEXT)");
+	SQLHSTMT* hstmt = createHandler();
+	retcode = SQLExecDirectA(*hstmt, (SQLCHAR*)query.c_str(), SQL_NTS);
+	SQLLEN sbCreate;
+
+	removeHandler(hstmt);
+
+	if (retcode != SQL_SUCCESS)
+	{
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 set<Film*>* RepositoryService::DB::getAllFilm()

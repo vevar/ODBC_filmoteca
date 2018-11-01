@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Genre.h"
 
-
+const char* Genre::TABLE_NAME = "genre";
 const char* Genre::TABLE_FIELD_ID = "id";
 const char* Genre::TABLE_FIELD_NAME = "name";
 

@@ -33,7 +33,6 @@ class RepositoryService
 
 		string addIdsToQuery(string query, vector<string> listIds);
 
-		bool checkTablesDataBase();
 
 		bool checkFilmTable();
 		bool checkGenreTable();
@@ -45,7 +44,9 @@ class RepositoryService
 
 		bool checkTableExist(string nameTable);
 
-		void createTableFilm();
+		bool createTableFilm();
+		bool createTableGenre();
+		bool createTableActor();
 
 
 	public:
@@ -78,6 +79,7 @@ class RepositoryService
 		bool removeFilmByTitle(string title);
 		
 		bool checkTablesDataBase();
+
 	};
 
 	DB* db;

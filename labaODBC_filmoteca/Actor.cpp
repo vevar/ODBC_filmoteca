@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Actor.h"
 
-
+const char* Actor::TABLE_NAME = "actor";
 const char* Actor::TABLE_FIELD_ID = "id";
 const char* Actor::TABLE_FIELD_FIRSTNAME = "first_name";
 const char* Actor::TABLE_FIELD_SECONDNAME = "second_name";

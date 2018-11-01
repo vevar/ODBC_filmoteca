@@ -368,12 +368,12 @@ vector<Genre*>* CLInterface::selectGenres()
 
 		cout << endl;
 		cout << "-1. Add new genre" << endl;
-		cout << "0. Exit" << endl;
+		cout << "-2. Exit" << endl;
 
 		cout << "Input id of genre: ";
 		cin >> contr;
 
-		if (contr == 0) {
+		if (contr == -2) {
 			break;
 		}
 
@@ -429,12 +429,12 @@ vector<Actor*>* CLInterface::selectActors()
 
 		cout << endl;
 		cout << "-1. Add new actor" << endl;
-		cout << "0. Exit" << endl;
+		cout << "-2. Exit" << endl;
 
 		cout << "Input id of actor: ";
 		cin >> contr;
 
-		if (contr == 0) {
+		if (contr == -2) {
 			break;
 		}
 
@@ -542,38 +542,45 @@ void CLInterface::addNewActor()
 
 void CLInterface::run()
 {
-	cout << "::: Welcome to Filmoteca ! :::" << endl;
-
-	int cont = -1;
-
-	while (cont != 0)
+	if (!reposService.getDB()->checkTablesDataBase())
 	{
-		printMenu();
+		cout << "ERROR database!!" << endl;
+	}
+	else {
+		cout << "::: Welcome to Filmoteca ! :::" << endl;
 
-		cin >> cont;
+		int cont = -1;
 
-		switch (cont)
+		while (cont != 0)
 		{
-		case 1:
-			printAllFilms();
-			break;
-		case 2:
-			addFilm();
-			break;
-		case 3:
-			editFilm();
-			break;
-		case 4:
-			removeFilm();
-			break;
-		case 5:
-			searchFilm();
-			break;
-		case 0:
-			break;
-		default:
-			printMessage(MESSAGE_INCORRECT_INPUT);
-			break;
+			printMenu();
+
+			cin >> cont;
+
+			switch (cont)
+			{
+			case 1:
+				printAllFilms();
+				break;
+			case 2:
+				addFilm();
+				break;
+			case 3:
+				editFilm();
+				break;
+			case 4:
+				removeFilm();
+				break;
+			case 5:
+				searchFilm();
+				break;
+			case 0:
+				break;
+			default:
+				printMessage(MESSAGE_INCORRECT_INPUT);
+				break;
+			}
 		}
 	}
+	
 }
